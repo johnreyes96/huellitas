@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using huellitas.API.Data;
 
 namespace huellitas.API
 {
@@ -7,15 +10,24 @@ namespace huellitas.API
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            IWebHost host = CreateWebHostBuilder(args).Build();
+            RunSeeding(host);
+            host.Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args)
+        private static void RunSeeding(IWebHost host)
         {
-            return Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(webBuilder =>
+            IServiceScopeFactory scopeFactory = host.Services.GetService<IServiceScopeFactory>();
+            using (IServiceScope scope = scopeFactory.CreateScope())
             {
-                webBuilder.UseStartup<Startup>();
-            });
+                SeedDb seeder = scope.ServiceProvider.GetService<SeedDb>();
+                seeder.SeedAsync().Wait();
+            }
+        }
+
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args)
+        {
+            return WebHost.CreateDefaultBuilder(args).UseStartup<Startup>();
         }
     }
 }
