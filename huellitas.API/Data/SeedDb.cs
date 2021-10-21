@@ -18,6 +18,7 @@ namespace huellitas.API.Data
             await _context.Database.EnsureCreatedAsync();
             await CheckDocumentTypesAsync();
             await CheckPetTypesAsync();
+            await CheckServicesAsync();
         }
 
         private async Task CheckDocumentTypesAsync()
@@ -47,6 +48,23 @@ namespace huellitas.API.Data
                 _context.PetTypes.Add(new PetType { Description = "Pato" });
                 _context.PetTypes.Add(new PetType { Description = "Perro" });
                 _context.PetTypes.Add(new PetType { Description = "Vaca" });
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        private async Task CheckServicesAsync()
+        {
+            if (!_context.Services.Any())
+            {
+                _context.Services.Add(new Service { Description = "Cirugía" });
+                _context.Services.Add(new Service { Description = "Esterilización" });
+                _context.Services.Add(new Service { Description = "Farmacología" });
+                _context.Services.Add(new Service { Description = "Guardería" });
+                _context.Services.Add(new Service { Description = "Hospitalización" });
+                _context.Services.Add(new Service { Description = "Imágenes diagnósticas" });
+                _context.Services.Add(new Service { Description = "Laboratorio clínico" });
+                _context.Services.Add(new Service { Description = "Peluquería" });
+                _context.Services.Add(new Service { Description = "Tienda para mascotas" });
                 await _context.SaveChangesAsync();
             }
         }
