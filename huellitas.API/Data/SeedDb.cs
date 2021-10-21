@@ -17,6 +17,7 @@ namespace huellitas.API.Data
         {
             await _context.Database.EnsureCreatedAsync();
             await CheckDocumentTypesAsync();
+            await CheckPetTypesAsync();
         }
 
         private async Task CheckDocumentTypesAsync()
@@ -28,6 +29,24 @@ namespace huellitas.API.Data
                 _context.DocumentTypes.Add(new DocumentType { Description = "Tarjeta de Identidad" });
                 _context.DocumentTypes.Add(new DocumentType { Description = "NIT" });
                 _context.DocumentTypes.Add(new DocumentType { Description = "Pasaporte" });
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        private async Task CheckPetTypesAsync()
+        {
+            if (!_context.PetTypes.Any())
+            {
+                _context.PetTypes.Add(new PetType { Description = "Burro" });
+                _context.PetTypes.Add(new PetType { Description = "Caballo" });
+                _context.PetTypes.Add(new PetType { Description = "Conejo" });
+                _context.PetTypes.Add(new PetType { Description = "Gato" });
+                _context.PetTypes.Add(new PetType { Description = "Hamnster" });
+                _context.PetTypes.Add(new PetType { Description = "Loro" });
+                _context.PetTypes.Add(new PetType { Description = "Oveja" });
+                _context.PetTypes.Add(new PetType { Description = "Pato" });
+                _context.PetTypes.Add(new PetType { Description = "Perro" });
+                _context.PetTypes.Add(new PetType { Description = "Vaca" });
                 await _context.SaveChangesAsync();
             }
         }
