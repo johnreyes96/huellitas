@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31613.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "huellitas.API", "huellitas.API\huellitas.API.csproj", "{9D720D53-5BE5-451C-9D65-9C8691C5F66D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "huellitas.API", "huellitas.API\huellitas.API.csproj", "{9D720D53-5BE5-451C-9D65-9C8691C5F66D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "huellitas.Common", "huellitas.Common\huellitas.Common.csproj", "{6CD54044-17B3-4E85-B41C-2A34DF9582DC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{9D720D53-5BE5-451C-9D65-9C8691C5F66D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D720D53-5BE5-451C-9D65-9C8691C5F66D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D720D53-5BE5-451C-9D65-9C8691C5F66D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CD54044-17B3-4E85-B41C-2A34DF9582DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CD54044-17B3-4E85-B41C-2A34DF9582DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CD54044-17B3-4E85-B41C-2A34DF9582DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CD54044-17B3-4E85-B41C-2A34DF9582DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

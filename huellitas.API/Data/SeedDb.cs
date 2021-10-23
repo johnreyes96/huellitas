@@ -1,4 +1,6 @@
 ﻿using huellitas.API.Data.Entities;
+using huellitas.API.Helpers;
+using huellitas.Common.Enums;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,10 +9,12 @@ namespace huellitas.API.Data
     public class SeedDb
     {
         private readonly DataContext _context;
+        private readonly IUserHelper _userHelper;
 
-        public SeedDb(DataContext context)
+        public SeedDb(DataContext context, IUserHelper userHelper)
         {
             _context = context;
+            _userHelper = userHelper;
         }
 
         public async Task SeedAsync()
@@ -19,6 +23,11 @@ namespace huellitas.API.Data
             await CheckDocumentTypesAsync();
             await CheckPetTypesAsync();
             await CheckServicesAsync();
+            await CheckRolesAsync();
+            await CheckUserAsync("1037965896", "Pedro", "Salazar", "pedro@yopmail.com", "3004568596", "Calle 10 # 10 10", UserType.Admin);
+            await CheckUserAsync("1035456218", "Claudia", "Mendez", "claudia@yopmail.com", "3165489650", "Autopista sur # 40 160", UserType.Admin);
+            await CheckUserAsync("1027456586", "Rodrigo", "Rodriguez", "rodrigo@yopmail.com", "3102568459", "Carrera 65 # 65 65", UserType.User);
+            await CheckUserAsync("1034459542", "Lucia", "Torres", "lucia@yopmail.com", "3152156548", "Transversal 7 # 10 10", UserType.User);
         }
 
         private async Task CheckDocumentTypesAsync()
@@ -66,6 +75,39 @@ namespace huellitas.API.Data
                 _context.Services.Add(new Service { Description = "Peluquería" });
                 _context.Services.Add(new Service { Description = "Tienda para mascotas" });
                 await _context.SaveChangesAsync();
+            }
+        }
+
+        private async Task CheckRolesAsync()
+        {
+            await _userHelper.CheckRoleAsync(UserType.Admin.ToString());
+            await _userHelper.CheckRoleAsync(UserType.User.ToString());
+        }
+
+        private async Task CheckUserAsync(string document, string firstName, string lastName, string email, string phoneNumber,
+            string address, UserType userType)
+        {
+            User user = await _userHelper.GetUserAsync(email);
+            if (user == null)
+            {
+                user = new User
+                {
+                    Address = address,
+                    Document = document,
+                    DocumentType = _context.DocumentTypes.FirstOrDefault(x => x.Description == "Cédula"),
+                    Email = email,
+                    FirstName = firstName,
+                    LastName = lastName,
+                    PhoneNumber = phoneNumber,
+                    UserName = email,
+                    UserType = userType
+                };
+
+                await _userHelper.AddUserAsync(user, "123456");
+                await _userHelper.AddUserToRoleAsync(user, userType.ToString());
+
+                string token = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                await _userHelper.ConfirmEmailAsync(user, token);
             }
         }
     }
