@@ -7,7 +7,17 @@ namespace huellitas.API.Helpers
     {
         public IEnumerable<SelectListItem> GetComboDocumentTypes()
         {
-            List<SelectListItem> list = new(); //TODO: @Diana realizar el llenado del combo document type
+            List<SelectListItem> list = _context.DocumentTypes.Select(x => new SelectListItem
+            {
+                Text = x.Description,
+                Value = $"{x.Id}"
+            }).OrderBy(x => x.Text).ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "[Seleccione un tipo de documento...]",
+                Value = "0"
+            });
             return list;
         }
     }
