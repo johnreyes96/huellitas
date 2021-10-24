@@ -24,5 +24,24 @@ namespace huellitas.API.Helpers
             });
             return list;
         }
+
+
+        public IEnumerable<SelectListItem> GetComboPetTypes()
+        {
+
+            List<SelectListItem> list = _context.PetTypes.Select(x => new SelectListItem
+            {
+                Text = x.Description,
+                Value = $"{x.Id}"
+            }).OrderBy(x => x.Text).ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "[Seleccione un tipo de mascota...]",
+                Value = "0"
+            });
+            return list;
+        }
+        
     }
 }

@@ -38,6 +38,7 @@ namespace huellitas.API.Controllers
         {
             return View(await _context.Users
                 .Include(x => x.DocumentType)
+                .Include(x => x.pets)
                 .Where(x => x.UserType == UserType.User)
                 .ToListAsync());
         }
@@ -136,6 +137,106 @@ namespace huellitas.API.Controllers
             await _blobHelper.DeleteBlobAsync(user.ImageId, "users");
             await _userHelper.DeleteUserAsync(user);
             return RedirectToAction(nameof(Index));
+        }
+
+
+        public async Task<IActionResult> Pets(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+
+            User user = await _context.Users
+                .Include(x => x.DocumentType)
+                .Include(x => x.pets)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
+        }
+
+        public async Task<IActionResult> AddPet(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+
+            User user = await _context.Users
+                .Include(x => x.pets)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            PetViewModel model = new PetViewModel
+            {
+                PetTypes = _combosHelper.GetComboPetTypes(),
+                UserId = user.Id
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddPet(PetViewModel petViewModel)
+        {
+            User user = await _context.Users
+                .Include(x => x.pets)
+                .FirstOrDefaultAsync(x => x.Id == petViewModel.UserId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            /*Guid imageId = Guid.Empty;
+            if (petViewModel.ImageFile != null)
+            {
+                imageId = await _blobHelper.UploadBlobAsync(vehicleViewModel.ImageFile, "vehiclephotos");
+            }*/
+
+            Pet pet = await _converterHelper.ToPetAsync(petViewModel, true);
+            /*if (vehicle.VehiclePhotos == null)
+            {
+                vehicle.VehiclePhotos = new List<VehiclePhoto>();
+            }
+
+            vehicle.VehiclePhotos.Add(new VehiclePhoto
+            {
+                ImageId = imageId
+            });*/
+
+            try
+            {
+                user.pets.Add(pet);
+                _context.Users.Update(user);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Pet), new { id = user.Id });
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                if (dbUpdateException.InnerException.Message.Contains("duplicate"))
+                {
+                    ModelState.AddModelError(string.Empty, "Ya existe esta mascota.");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
+                }
+            }
+            catch (Exception exception)
+            {
+                ModelState.AddModelError(string.Empty, exception.Message);
+            }
+
+            petViewModel.PetTypes = _combosHelper.GetComboPetTypes();
+            return View(petViewModel);
         }
     }
 }

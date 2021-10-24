@@ -52,5 +52,19 @@ namespace huellitas.API.Helpers
                 UserType = user.UserType
             };
         }
+
+
+        public async Task<Pet> ToPetAsync(PetViewModel model, bool isNew)
+        {
+            return new Pet
+            {
+                petType = await _context.PetTypes.FindAsync(model.PetTypeId),
+                Color = model.Color,
+                Id = isNew ? 0 : model.Id,
+                Name = model.Name,
+                Observations = model.Observations,
+                Race = model.Race.ToUpper(),
+            };
+        }
     }
 }

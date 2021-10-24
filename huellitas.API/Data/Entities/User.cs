@@ -1,6 +1,7 @@
 ﻿using huellitas.Common.Enums;
 using Microsoft.AspNetCore.Identity;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace huellitas.API.Data.Entities
@@ -35,7 +36,7 @@ namespace huellitas.API.Data.Entities
 
         [Display(Name = "Foto")]
         public string ImageFullPath => ImageId == Guid.Empty
-            ? $"https://localhost:44345/images/no_image.png" //TODO: change url
+            ? $"https://localhost:44329/images/no_image.png" //TODO: change url
             : $"https://huellitas.blob.core.windows.net/users/{ImageId}";
 
         [Display(Name = "Tipo de usuario")]
@@ -43,5 +44,7 @@ namespace huellitas.API.Data.Entities
 
         [Display(Name = "Usuario")]
         public string FullName => $"{FirstName} {LastName}";
+
+        public ICollection<Pet> pets { get; set; }
     }
 }

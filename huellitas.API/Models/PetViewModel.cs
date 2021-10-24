@@ -1,25 +1,24 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace huellitas.API.Data.Entities
+namespace huellitas.API.Models
 {
-    public class Pet
+    public class PetViewModel
     {
         public int Id { get; set; }
 
-        [JsonIgnore]
-        [Display(Name = "Tipo de Mascota")]
+        [Display(Name = "Tipo de Marca")]
+        [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar un tipo de verhículo.")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        public PetType petType { get; set; }
+        public int PetTypeId { get; set; }
 
-        [Display(Name = "Usuario")]
-        [JsonIgnore]
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        public User User { get; set; }
+        public IEnumerable<SelectListItem> PetTypes { get; set; }
+
+        public string UserId { get; set; }
 
         [Display(Name = "Nombre Mascota")]
         [MaxLength(50, ErrorMessage = "El campo {0} no puede tener más de {1} carácteres.")]
