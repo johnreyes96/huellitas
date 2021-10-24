@@ -1,13 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using huellitas.API.Data;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace huellitas.API.Helpers
 {
     public class CombosHelper : ICombosHelper
     {
+        private readonly DataContext _context;
         public IEnumerable<SelectListItem> GetComboDocumentTypes()
         {
-            List<SelectListItem> list = _context.DocumentTypes.Select(x => new SelectListItem
+        
+        List<SelectListItem> list = _context.DocumentTypes.Select(x => new SelectListItem
             {
                 Text = x.Description,
                 Value = $"{x.Id}"

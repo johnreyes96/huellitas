@@ -14,12 +14,15 @@ namespace huellitas.API.Data
         public DbSet<PetType> PetTypes { get; set; }
         public DbSet<Service> Services { get; set; }
 
+        public DbSet<Pet> Pets { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<DocumentType>().HasIndex(x => x.Description).IsUnique();
             modelBuilder.Entity<PetType>().HasIndex(x => x.Description).IsUnique();
             modelBuilder.Entity<Service>().HasIndex(x => x.Description).IsUnique();
+            modelBuilder.Entity<Pet>().HasIndex(x => x.Name).IsUnique();
         }
     }
 }
