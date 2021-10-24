@@ -18,6 +18,10 @@ namespace huellitas.API.Data
 
         public DbSet<Billing> Billings { get; set; }
 
+        public DbSet<BillingDetail> BillingDetails { get; set; }
+
+        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -26,6 +30,7 @@ namespace huellitas.API.Data
             modelBuilder.Entity<Service>().HasIndex(x => x.Description).IsUnique();
             modelBuilder.Entity<Pet>().HasIndex(x => x.Name).IsUnique();
             modelBuilder.Entity<Billing>().HasIndex(x => x.Id).IsUnique();
+            modelBuilder.Entity<BillingDetail>().HasIndex(x => x.Id).IsUnique();
         }
     }
 }
