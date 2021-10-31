@@ -37,8 +37,7 @@ namespace huellitas.API.Data.Entities
         public string Color { get; set; }
 
         [Display(Name = "Observaciones")]
-        [MaxLength(50, ErrorMessage = "El campo {0} no puede tener más de {1} carácteres.")]
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        [DataType(DataType.MultilineText)]
         public string Observations { get; set; }
     }
 }

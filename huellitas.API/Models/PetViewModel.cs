@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,8 +12,8 @@ namespace huellitas.API.Models
     {
         public int Id { get; set; }
 
-        [Display(Name = "Tipo de Marca")]
-        [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar un tipo de verhículo.")]
+        [Display(Name = "Tipo de Mascota")]
+        [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar un tipo de mascota.")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public int PetTypeId { get; set; }
 
@@ -36,8 +37,10 @@ namespace huellitas.API.Models
         public string Color { get; set; }
 
         [Display(Name = "Observaciones")]
-        [MaxLength(50, ErrorMessage = "El campo {0} no puede tener más de {1} carácteres.")]
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        [DataType(DataType.MultilineText)]
         public string Observations { get; set; }
+
+        [Display(Name = "Foto")]
+        public IFormFile ImageFile { get; set; }
     }
 }

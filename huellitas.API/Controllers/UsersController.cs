@@ -150,6 +150,7 @@ namespace huellitas.API.Controllers
             User user = await _context.Users
                 .Include(x => x.DocumentType)
                 .Include(x => x.pets)
+                .ThenInclude(x => x.petType )
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (user == null)
             {

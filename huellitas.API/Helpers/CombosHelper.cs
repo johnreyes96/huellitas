@@ -8,6 +8,12 @@ namespace huellitas.API.Helpers
     public class CombosHelper : ICombosHelper
     {
         private readonly DataContext _context;
+
+        public CombosHelper(DataContext context)
+        {
+            _context = context;
+        }
+
         public IEnumerable<SelectListItem> GetComboDocumentTypes()
         {
         
