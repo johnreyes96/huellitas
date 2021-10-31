@@ -88,33 +88,45 @@
                             <th>
                                 @Html.DisplayNameFor(model => model.pets.FirstOrDefault().Observations)
                             </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.pets.FirstOrDefault().PetPhotosCount)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.pets.FirstOrDefault().ImageFullPath)
+                            </th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model.pets)
                         {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Name)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.petType.Description)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Color)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Observations)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Race)
-                                </td>
-                                 <td>
-                                    <a asp-action="EditPet" asp-route-id="@item.Id" class="btn btn-warning">Editar</a>
-                                    <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog">Borrar</button>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.petType.Description)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Color)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Observations)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Race)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PetPhotosCount)
+                            </td>
+                            <td>
+                                <img src="@item.ImageFullPath" style="width:100px;height:100px;max-width: 100%; height: auto;" />
+                            </td>
+                            <td>
+                                <a asp-action="EditPet" asp-route-id="@item.Id" class="btn btn-warning">Editar</a>
+                                <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog">Borrar</button>
+                            </td>
+                        </tr>
                         }
                     </tbody>
                 </table>
@@ -142,7 +154,7 @@
                 ]
             });
             // Delete item
-            sc_deleteDialog.openModal('deleteItem', true, 'btnYesDelete', '/pets/DeletePet/', false);
+            sc_deleteDialog.openModal('deleteItem', true, 'btnYesDelete', '/Users/pets/DeletePet/', false);
         });
     </script>
 }

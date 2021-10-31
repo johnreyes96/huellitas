@@ -10,13 +10,18 @@
 <hr />
 <div class="row">
     <div class="col-md-12">
-        <form asp-action="AddVehicle" enctype="multipart/form-data">
+        <form asp-action="AddPet" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="UserId" />
 
             <partial name="_Pet" />
 
-           
+            <div class="form-group">
+                <label asp-for="ImageFile" class="control-label"></label>
+                <input asp-for="ImageFile" type="file" class="form-control" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Guardar" class="btn btn-primary" />
                 <a asp-action="Pets" asp-route-id="@Model.UserId" class="btn btn-success">Regresar</a>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using huellitas.API.Data.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -42,5 +43,7 @@ namespace huellitas.API.Models
 
         [Display(Name = "Foto")]
         public IFormFile ImageFile { get; set; }
+
+        public ICollection<PetPhoto> PetPhotos { get; set; }
     }
 }

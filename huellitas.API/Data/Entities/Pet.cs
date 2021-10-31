@@ -39,5 +39,15 @@ namespace huellitas.API.Data.Entities
         [Display(Name = "Observaciones")]
         [DataType(DataType.MultilineText)]
         public string Observations { get; set; }
+
+        [Display(Name = "# Fotos")]
+        public int PetPhotosCount => PetPhotos == null ? 0 : PetPhotos.Count;
+
+        public ICollection<PetPhoto> PetPhotos { get; set; }
+
+        [Display(Name = "Foto")]
+        public string ImageFullPath => PetPhotos == null || PetPhotos.Count == 0
+           ? $"https://huellitasapi.azurewebsites.net/images/no_image.png"
+           : PetPhotos.FirstOrDefault().ImageFullPath;
     }
 }

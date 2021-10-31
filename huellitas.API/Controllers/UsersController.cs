@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -151,6 +152,8 @@ namespace huellitas.API.Controllers
                 .Include(x => x.DocumentType)
                 .Include(x => x.pets)
                 .ThenInclude(x => x.petType )
+                .Include(x => x.pets)
+                .ThenInclude(x => x.PetPhotos)
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (user == null)
             {
@@ -196,22 +199,22 @@ namespace huellitas.API.Controllers
                 return NotFound();
             }
 
-            /*Guid imageId = Guid.Empty;
+            Guid imageId = Guid.Empty;
             if (petViewModel.ImageFile != null)
             {
-                imageId = await _blobHelper.UploadBlobAsync(vehicleViewModel.ImageFile, "vehiclephotos");
-            }*/
-
-            Pet pet = await _converterHelper.ToPetAsync(petViewModel, true);
-            /*if (vehicle.VehiclePhotos == null)
-            {
-                vehicle.VehiclePhotos = new List<VehiclePhoto>();
+                imageId = await _blobHelper.UploadBlobAsync(petViewModel.ImageFile, "petphotos");
             }
 
-            vehicle.VehiclePhotos.Add(new VehiclePhoto
+            Pet pet = await _converterHelper.ToPetAsync(petViewModel, true);
+            if (pet.PetPhotos == null)
+            {
+                pet.PetPhotos = new List<PetPhoto>();
+            }
+
+            pet.PetPhotos.Add(new PetPhoto
             {
                 ImageId = imageId
-            });*/
+            });
 
             try
             {
