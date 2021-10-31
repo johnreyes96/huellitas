@@ -66,5 +66,24 @@ namespace huellitas.API.Helpers
                 Race = model.Race.ToUpper(),
             };
         }
+
+
+        
+
+        public PetViewModel ToPetViewModel(Pet pet)
+        {
+            return new PetViewModel
+            {
+                Color = pet.Color,
+                Id = pet.Id,
+                Name = pet.Name,
+                Race = pet.Race,
+                PetTypeId = pet.petType.Id,
+                Observations = pet.Observations,
+                PetPhotos = pet.PetPhotos,
+                PetTypes = _combosHelper.GetComboPetTypes(),
+                UserId = pet.User.Id
+            };
+        }
     }
 }

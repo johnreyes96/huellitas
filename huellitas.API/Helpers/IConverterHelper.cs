@@ -13,6 +13,8 @@ namespace huellitas.API.Helpers
 
         Task<Pet> ToPetAsync(PetViewModel model, bool isNew);
 
+        PetViewModel ToPetViewModel(Pet pet);
+
 
     }
 }

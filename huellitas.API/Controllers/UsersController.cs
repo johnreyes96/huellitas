@@ -242,5 +242,66 @@ namespace huellitas.API.Controllers
             petViewModel.PetTypes = _combosHelper.GetComboPetTypes();
             return View(petViewModel);
         }
+
+        public async Task<IActionResult> EditPet(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            Pet pet = await _context.Pets
+                .Include(x => x.User)
+                .Include(x => x.petType)
+                .Include(x => x.PetPhotos)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            if (pet == null)
+            {
+                return NotFound();
+            }
+
+            PetViewModel model = _converterHelper.ToPetViewModel(pet);
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditPet(int id, PetViewModel petViewModel)
+        {
+            if (id != petViewModel.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    Pet pet = await _converterHelper.ToPetAsync(petViewModel, false);
+                    _context.Pets.Update(pet);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Pets), new { id = petViewModel.UserId });
+                }
+                catch (DbUpdateException dbUpdateException)
+                {
+                    if (dbUpdateException.InnerException.Message.Contains("duplicate"))
+                    {
+                        ModelState.AddModelError(string.Empty, "Ya existe una mascota con este nombre.");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    ModelState.AddModelError(string.Empty, exception.Message);
+                }
+            }
+
+
+            petViewModel.PetTypes = _combosHelper.GetComboPetTypes();
+            return View(petViewModel);
+        }
     }
 }
