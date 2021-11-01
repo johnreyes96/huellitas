@@ -20,6 +20,7 @@ namespace huellitas.API.Data
         public async Task SeedAsync()
         {
             await _context.Database.EnsureCreatedAsync();
+            await CheckAppointmentTypesAsync();
             await CheckDocumentTypesAsync();
             await CheckPetTypesAsync();
             await CheckServicesAsync();
@@ -28,6 +29,17 @@ namespace huellitas.API.Data
             await CheckUserAsync("1035456218", "Claudia", "Mendez", "claudia@yopmail.com", "3165489650", "Autopista sur # 40 160", UserType.Admin);
             await CheckUserAsync("1027456586", "Rodrigo", "Rodriguez", "rodrigo@yopmail.com", "3102568459", "Carrera 65 # 65 65", UserType.User);
             await CheckUserAsync("1034459542", "Lucia", "Torres", "lucia@yopmail.com", "3152156548", "Transversal 7 # 10 10", UserType.User);
+        }
+
+        private async Task CheckAppointmentTypesAsync()
+        {
+            if (!_context.AppointmentTypes.Any())
+            {
+                _context.AppointmentTypes.Add(new AppointmentType { Description = "Cita prioritaria" });
+                _context.AppointmentTypes.Add(new AppointmentType { Description = "Cita de revisión" });
+                _context.AppointmentTypes.Add(new AppointmentType { Description = "Cita de consulta" });
+                await _context.SaveChangesAsync();
+            }
         }
 
         private async Task CheckDocumentTypesAsync()

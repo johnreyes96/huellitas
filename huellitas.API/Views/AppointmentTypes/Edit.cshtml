@@ -1,0 +1,28 @@
+﻿@model huellitas.API.Data.Entities.AppointmentType
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+
+<h3>Editar Tipo de Cita</h3>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+
+            <partial name="_AppointmentType" />
+
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-success">Regresar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
