@@ -12,7 +12,7 @@ namespace huellitas.API.Data.Entities
 
 
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        public Pet Vehicle { get; set; }
+        public Pet Pet { get; set; }
 
         [Display(Name = "Foto")]
         public Guid ImageId { get; set; }

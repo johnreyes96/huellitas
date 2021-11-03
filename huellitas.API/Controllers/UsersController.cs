@@ -303,5 +303,53 @@ namespace huellitas.API.Controllers
             petViewModel.PetTypes = _combosHelper.GetComboPetTypes();
             return View(petViewModel);
         }
+
+
+        public async Task<IActionResult> DeletePet(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            Pet pet = await _context.Pets
+                .Include(x => x.User)
+                .Include(x => x.PetPhotos)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            if (pet == null)
+            {
+                return NotFound();
+            }
+
+            _context.Pets.Remove(pet);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Pets), new { id = pet.User.Id });
+        }
+
+        public async Task<IActionResult> DeleteImagePet(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            PetPhoto petPhoto = await _context.PetPhotos
+                .Include(x => x.Pet)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            if (petPhoto == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                await _blobHelper.DeleteBlobAsync(petPhoto.ImageId, "petphotos");
+            }
+            catch { }
+
+            _context.PetPhotos.Remove(petPhoto);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(EditPet), new { id = petPhoto.Pet.Id });
+        }
     }
 }
