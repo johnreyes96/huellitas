@@ -221,7 +221,7 @@ namespace huellitas.API.Controllers
                 user.pets.Add(pet);
                 _context.Users.Update(user);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Pet), new { id = user.Id });
+                return RedirectToAction(nameof(Pets), new { id = user.Id });
             }
             catch (DbUpdateException dbUpdateException)
             {
@@ -403,6 +403,27 @@ namespace huellitas.API.Controllers
 
             return View(model);
 
+        }
+
+        public async Task<IActionResult> BillingPet(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            Pet pet = await _context.Pets
+                .Include(x => x.User)
+                .Include(x => x.petType)
+                .Include(x => x.Billings)
+                .Include(x => x.PetPhotos)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            if (pet == null)
+            {
+                return NotFound();
+            }
+
+            return View(pet);
         }
     }
 }

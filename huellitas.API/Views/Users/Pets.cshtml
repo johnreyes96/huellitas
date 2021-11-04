@@ -89,6 +89,9 @@
                                 @Html.DisplayNameFor(model => model.pets.FirstOrDefault().Observations)
                             </th>
                             <th>
+                                @Html.DisplayNameFor(model => model.pets.FirstOrDefault().BillingsCount)
+                            </th>
+                            <th>
                                 @Html.DisplayNameFor(model => model.pets.FirstOrDefault().PetPhotosCount)
                             </th>
                             <th>
@@ -117,6 +120,9 @@
                                 @Html.DisplayFor(modelItem => item.Race)
                             </td>
                             <td>
+                                @Html.DisplayFor(modelItem => item.BillingsCount)
+                            </td>
+                            <td>
                                 @Html.DisplayFor(modelItem => item.PetPhotosCount)
                             </td>
                             <td>
@@ -124,6 +130,7 @@
                             </td>
                             <td>
                                 <a asp-action="EditPet" asp-route-id="@item.Id" class="btn btn-warning">Editar</a>
+                                <a asp-action="BillingPet" asp-route-id="@item.Id" class="btn btn-info">Facturas<i class="glyphicon glyphicon-align-justify"></i></a>
                                 <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog">Borrar</button>
                             </td>
                         </tr>

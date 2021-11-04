@@ -10,7 +10,7 @@ using huellitas.API.Data;
 namespace huellitas.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20211104045528_huellitas")]
+    [Migration("20211104051134_huellitas")]
     partial class huellitas
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
