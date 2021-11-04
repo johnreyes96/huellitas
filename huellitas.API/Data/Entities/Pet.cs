@@ -49,5 +49,10 @@ namespace huellitas.API.Data.Entities
         public string ImageFullPath => PetPhotos == null || PetPhotos.Count == 0
            ? $"https://huellitasapi.azurewebsites.net/images/no_image.png"
            : PetPhotos.FirstOrDefault().ImageFullPath;
+
+        public ICollection<Billing> Billings { get; set; }
+
+        [Display(Name = "# Facturas")]
+        public int BillingsCount => Billings == null ? 0 : Billings.Count;
     }
 }

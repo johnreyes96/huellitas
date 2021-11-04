@@ -150,8 +150,27 @@ namespace huellitas.API.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("huellitas.API.Data.Entities.Billing", b =>
             modelBuilder.Entity("huellitas.API.Data.Entities.AppointmentType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Description")
+                        .IsUnique();
+
+                    b.ToTable("AppointmentTypes");
+                });
+
+            modelBuilder.Entity("huellitas.API.Data.Entities.Billing", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -161,19 +180,18 @@ namespace huellitas.API.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<double>("TotalValue")
-                        .HasColumnType("float");
+                    b.Property<int>("PetId")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<double>("ValueSubtotal")
-                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Id")
                         .IsUnique();
+
+                    b.HasIndex("PetId");
 
                     b.HasIndex("UserId");
 
@@ -187,14 +205,20 @@ namespace huellitas.API.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("BillingId")
+                    b.Property<int>("BillingId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<double>("UnitValue")
-                        .HasColumnType("float");
+                    b.Property<int?>("ServiceDetailId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ServiceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UnitValue")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -203,18 +227,11 @@ namespace huellitas.API.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
+                    b.HasIndex("ServiceDetailId");
+
+                    b.HasIndex("ServiceId");
+
                     b.ToTable("BillingDetail");
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Description")
-                        .IsUnique();
-
-                    b.ToTable("AppointmentTypes");
                 });
 
             modelBuilder.Entity("huellitas.API.Data.Entities.DocumentType", b =>
@@ -339,6 +356,26 @@ namespace huellitas.API.Migrations
                         .IsUnique();
 
                     b.ToTable("Services");
+                });
+
+            modelBuilder.Entity("huellitas.API.Data.Entities.ServiceDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.ToTable("ServicesDetails");
                 });
 
             modelBuilder.Entity("huellitas.API.Data.Entities.User", b =>
@@ -489,9 +526,17 @@ namespace huellitas.API.Migrations
 
             modelBuilder.Entity("huellitas.API.Data.Entities.Billing", b =>
                 {
+                    b.HasOne("huellitas.API.Data.Entities.Pet", "Pet")
+                        .WithMany("Billings")
+                        .HasForeignKey("PetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("huellitas.API.Data.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+
+                    b.Navigation("Pet");
 
                     b.Navigation("User");
                 });
@@ -499,10 +544,26 @@ namespace huellitas.API.Migrations
             modelBuilder.Entity("huellitas.API.Data.Entities.BillingDetail", b =>
                 {
                     b.HasOne("huellitas.API.Data.Entities.Billing", "Billing")
+                        .WithMany("BillingDetails")
+                        .HasForeignKey("BillingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("huellitas.API.Data.Entities.ServiceDetail", "ServiceDetail")
                         .WithMany()
-                        .HasForeignKey("BillingId");
+                        .HasForeignKey("ServiceDetailId");
+
+                    b.HasOne("huellitas.API.Data.Entities.Service", "Service")
+                        .WithMany("BillingDetails")
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Billing");
+
+                    b.Navigation("Service");
+
+                    b.Navigation("ServiceDetail");
                 });
 
             modelBuilder.Entity("huellitas.API.Data.Entities.Pet", b =>
@@ -546,6 +607,11 @@ namespace huellitas.API.Migrations
                     b.Navigation("DocumentType");
                 });
 
+            modelBuilder.Entity("huellitas.API.Data.Entities.Billing", b =>
+                {
+                    b.Navigation("BillingDetails");
+                });
+
             modelBuilder.Entity("huellitas.API.Data.Entities.DocumentType", b =>
                 {
                     b.Navigation("Users");
@@ -553,12 +619,19 @@ namespace huellitas.API.Migrations
 
             modelBuilder.Entity("huellitas.API.Data.Entities.Pet", b =>
                 {
+                    b.Navigation("Billings");
+
                     b.Navigation("PetPhotos");
                 });
 
             modelBuilder.Entity("huellitas.API.Data.Entities.PetType", b =>
                 {
                     b.Navigation("pets");
+                });
+
+            modelBuilder.Entity("huellitas.API.Data.Entities.Service", b =>
+                {
+                    b.Navigation("BillingDetails");
                 });
 
             modelBuilder.Entity("huellitas.API.Data.Entities.User", b =>

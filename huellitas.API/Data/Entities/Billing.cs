@@ -16,22 +16,27 @@ namespace huellitas.API.Data.Entities
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public User User { get; set; }
 
+        [Display(Name = "Mascota")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        public Pet Pet { get; set; }
 
         [Display(Name = "Fecha")]
-        [JsonIgnore]
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd hh:mm tt}")]
         public DateTime Date { get; set; }
 
-        [Display(Name = "Valor Subtotal")]
-        [JsonIgnore]
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        public Double ValueSubtotal { get; set; }
+        [Display(Name = "Fecha")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd hh:mm tt}")]
+        public DateTime DateLocal => Date.ToLocalTime();
 
-
+        
         [Display(Name = "Valor Total")]
-        [JsonIgnore]
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        public Double TotalValue { get; set; }
+        [DisplayFormat(DataFormatString = "{0:C2}")]
+        public int TotalValue => BillingDetails == null ? 0 : BillingDetails.Sum(x => (x.ValueSubtotal*19/100) + x.ValueSubtotal);
+
+        public ICollection<BillingDetail> BillingDetails { get; set; }
+
+        [Display(Name = "# Servicios")]
+        public int BillingDetailsCount => BillingDetails == null ? 0 : BillingDetails.Count;
 
 
 

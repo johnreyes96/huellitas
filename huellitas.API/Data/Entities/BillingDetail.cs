@@ -16,14 +16,26 @@ namespace huellitas.API.Data.Entities
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public Billing Billing { get; set; }
 
+        [Display(Name = "Servicio")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        public Service Service { get; set; }
+
+        [Display(Name = "Detalle Servicio")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        public  ServiceDetail ServiceDetail { get; set; }
+
         [Display(Name = "Valor Unitario")]
         [JsonIgnore]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        public Double UnitValue { get; set; }
+        public int UnitValue { get; set; }
 
         [Display(Name = "Cantidad")]
         [JsonIgnore]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public int Quantity { get; set; }
+
+        [Display(Name = "Valor Subtotal")]
+        [DisplayFormat(DataFormatString = "{0:C2}")]
+        public int ValueSubtotal => UnitValue * Quantity;
     }
 }

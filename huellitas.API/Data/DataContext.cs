@@ -19,6 +19,7 @@ namespace huellitas.API.Data
 
         public DbSet<Billing> Billings { get; set; }
 
+        public DbSet<ServiceDetail> ServicesDetails { get; set; }
 
         public DbSet<PetPhoto> PetPhotos { get; set; }
 
@@ -33,6 +34,7 @@ namespace huellitas.API.Data
             modelBuilder.Entity<Pet>().HasIndex(x => x.Name).IsUnique();
             modelBuilder.Entity<Billing>().HasIndex(x => x.Id).IsUnique();
             modelBuilder.Entity<BillingDetail>().HasIndex(x => x.Id).IsUnique();
+            modelBuilder.Entity<ServiceDetail>().HasIndex(x => x.Id).IsUnique();
         }
     }
 }
