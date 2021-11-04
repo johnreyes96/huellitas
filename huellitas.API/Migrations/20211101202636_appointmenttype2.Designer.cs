@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using huellitas.API.Data;
 
 namespace huellitas.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20211101202636_appointmenttype2")]
+    partial class appointmenttype2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -150,7 +152,6 @@ namespace huellitas.API.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("huellitas.API.Data.Entities.Billing", b =>
             modelBuilder.Entity("huellitas.API.Data.Entities.AppointmentType", b =>
                 {
                     b.Property<int>("Id")
@@ -158,52 +159,6 @@ namespace huellitas.API.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("TotalValue")
-                        .HasColumnType("float");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<double>("ValueSubtotal")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Billings");
-                });
-
-            modelBuilder.Entity("huellitas.API.Data.Entities.BillingDetail", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("BillingId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<double>("UnitValue")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BillingId");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
-
-                    b.ToTable("BillingDetail");
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -235,70 +190,6 @@ namespace huellitas.API.Migrations
                         .IsUnique();
 
                     b.ToTable("DocumentTypes");
-                });
-
-            modelBuilder.Entity("huellitas.API.Data.Entities.Pet", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Color")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Observations")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Race")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("petTypeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("petTypeId");
-
-                    b.ToTable("Pets");
-                });
-
-            modelBuilder.Entity("huellitas.API.Data.Entities.PetPhoto", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<Guid>("ImageId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("PetId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PetId");
-
-                    b.ToTable("PetPhotos");
                 });
 
             modelBuilder.Entity("huellitas.API.Data.Entities.PetType", b =>
@@ -487,54 +378,6 @@ namespace huellitas.API.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("huellitas.API.Data.Entities.Billing", b =>
-                {
-                    b.HasOne("huellitas.API.Data.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("huellitas.API.Data.Entities.BillingDetail", b =>
-                {
-                    b.HasOne("huellitas.API.Data.Entities.Billing", "Billing")
-                        .WithMany()
-                        .HasForeignKey("BillingId");
-
-                    b.Navigation("Billing");
-                });
-
-            modelBuilder.Entity("huellitas.API.Data.Entities.Pet", b =>
-                {
-                    b.HasOne("huellitas.API.Data.Entities.User", "User")
-                        .WithMany("pets")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("huellitas.API.Data.Entities.PetType", "petType")
-                        .WithMany("pets")
-                        .HasForeignKey("petTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("petType");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("huellitas.API.Data.Entities.PetPhoto", b =>
-                {
-                    b.HasOne("huellitas.API.Data.Entities.Pet", "Pet")
-                        .WithMany("PetPhotos")
-                        .HasForeignKey("PetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Pet");
-                });
-
             modelBuilder.Entity("huellitas.API.Data.Entities.User", b =>
                 {
                     b.HasOne("huellitas.API.Data.Entities.DocumentType", "DocumentType")
@@ -549,21 +392,6 @@ namespace huellitas.API.Migrations
             modelBuilder.Entity("huellitas.API.Data.Entities.DocumentType", b =>
                 {
                     b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("huellitas.API.Data.Entities.Pet", b =>
-                {
-                    b.Navigation("PetPhotos");
-                });
-
-            modelBuilder.Entity("huellitas.API.Data.Entities.PetType", b =>
-                {
-                    b.Navigation("pets");
-                });
-
-            modelBuilder.Entity("huellitas.API.Data.Entities.User", b =>
-                {
-                    b.Navigation("pets");
                 });
 #pragma warning restore 612, 618
         }

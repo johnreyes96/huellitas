@@ -10,6 +10,7 @@ namespace huellitas.API.Data
         {
         }
 
+        public DbSet<AppointmentType> AppointmentTypes { get; set; }
         public DbSet<DocumentType> DocumentTypes { get; set; }
         public DbSet<PetType> PetTypes { get; set; }
         public DbSet<Service> Services { get; set; }
@@ -25,6 +26,7 @@ namespace huellitas.API.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<AppointmentType>().HasIndex(x => x.Description).IsUnique();
             modelBuilder.Entity<DocumentType>().HasIndex(x => x.Description).IsUnique();
             modelBuilder.Entity<PetType>().HasIndex(x => x.Description).IsUnique();
             modelBuilder.Entity<Service>().HasIndex(x => x.Description).IsUnique();
