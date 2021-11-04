@@ -11,7 +11,7 @@ namespace huellitas.API.Data.Entities
     {
         public int Id { get; set; }
 
-        [Display(Name = "Usuario")]
+        [Display(Name = "Veterinario")]
         [JsonIgnore]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public User User { get; set; }

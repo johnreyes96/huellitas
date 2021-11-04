@@ -3,14 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace huellitas.API.Migrations
 {
-    public partial class AllTablePetPhoto : Migration
+    public partial class huellitas : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_BillingDetails_Billings_BillingId",
-                table: "BillingDetails");
-
             migrationBuilder.DropForeignKey(
                 name: "FK_Pets_AspNetUsers_UserId",
                 table: "Pets");
@@ -18,24 +14,6 @@ namespace huellitas.API.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_Pets_PetTypes_petTypeId",
                 table: "Pets");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_BillingDetails",
-                table: "BillingDetails");
-
-            migrationBuilder.RenameTable(
-                name: "BillingDetails",
-                newName: "BillingDetail");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_BillingDetails_Id",
-                table: "BillingDetail",
-                newName: "IX_BillingDetail_Id");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_BillingDetails_BillingId",
-                table: "BillingDetail",
-                newName: "IX_BillingDetail_BillingId");
 
             migrationBuilder.AlterColumn<int>(
                 name: "petTypeId",
@@ -66,10 +44,27 @@ namespace huellitas.API.Migrations
                 oldType: "nvarchar(50)",
                 oldMaxLength: 50);
 
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_BillingDetail",
-                table: "BillingDetail",
-                column: "Id");
+            migrationBuilder.CreateTable(
+                name: "Billings",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ValueSubtotal = table.Column<double>(type: "float", nullable: false),
+                    TotalValue = table.Column<double>(type: "float", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Billings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Billings_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
 
             migrationBuilder.CreateTable(
                 name: "PetPhotos",
@@ -77,32 +72,67 @@ namespace huellitas.API.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    VehicleId = table.Column<int>(type: "int", nullable: true),
+                    PetId = table.Column<int>(type: "int", nullable: false),
                     ImageId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PetPhotos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PetPhotos_Pets_VehicleId",
-                        column: x => x.VehicleId,
+                        name: "FK_PetPhotos_Pets_PetId",
+                        column: x => x.PetId,
                         principalTable: "Pets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BillingDetail",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BillingId = table.Column<int>(type: "int", nullable: true),
+                    UnitValue = table.Column<double>(type: "float", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BillingDetail", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BillingDetail_Billings_BillingId",
+                        column: x => x.BillingId,
+                        principalTable: "Billings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PetPhotos_VehicleId",
-                table: "PetPhotos",
-                column: "VehicleId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_BillingDetail_Billings_BillingId",
+                name: "IX_BillingDetail_BillingId",
                 table: "BillingDetail",
-                column: "BillingId",
-                principalTable: "Billings",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
+                column: "BillingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BillingDetail_Id",
+                table: "BillingDetail",
+                column: "Id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Billings_Id",
+                table: "Billings",
+                column: "Id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Billings_UserId",
+                table: "Billings",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PetPhotos_PetId",
+                table: "PetPhotos",
+                column: "PetId");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Pets_AspNetUsers_UserId",
@@ -124,10 +154,6 @@ namespace huellitas.API.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_BillingDetail_Billings_BillingId",
-                table: "BillingDetail");
-
-            migrationBuilder.DropForeignKey(
                 name: "FK_Pets_AspNetUsers_UserId",
                 table: "Pets");
 
@@ -136,25 +162,13 @@ namespace huellitas.API.Migrations
                 table: "Pets");
 
             migrationBuilder.DropTable(
+                name: "BillingDetail");
+
+            migrationBuilder.DropTable(
                 name: "PetPhotos");
 
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_BillingDetail",
-                table: "BillingDetail");
-
-            migrationBuilder.RenameTable(
-                name: "BillingDetail",
-                newName: "BillingDetails");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_BillingDetail_Id",
-                table: "BillingDetails",
-                newName: "IX_BillingDetails_Id");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_BillingDetail_BillingId",
-                table: "BillingDetails",
-                newName: "IX_BillingDetails_BillingId");
+            migrationBuilder.DropTable(
+                name: "Billings");
 
             migrationBuilder.AlterColumn<int>(
                 name: "petTypeId",
@@ -182,19 +196,6 @@ namespace huellitas.API.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)",
                 oldNullable: true);
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_BillingDetails",
-                table: "BillingDetails",
-                column: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_BillingDetails_Billings_BillingId",
-                table: "BillingDetails",
-                column: "BillingId",
-                principalTable: "Billings",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Pets_AspNetUsers_UserId",

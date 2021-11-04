@@ -279,12 +279,12 @@ namespace huellitas.API.Migrations
                     b.Property<Guid>("ImageId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("VehicleId")
+                    b.Property<int>("PetId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("VehicleId");
+                    b.HasIndex("PetId");
 
                     b.ToTable("PetPhotos");
                 });
@@ -514,11 +514,13 @@ namespace huellitas.API.Migrations
 
             modelBuilder.Entity("huellitas.API.Data.Entities.PetPhoto", b =>
                 {
-                    b.HasOne("huellitas.API.Data.Entities.Pet", "Vehicle")
-                        .WithMany()
-                        .HasForeignKey("VehicleId");
+                    b.HasOne("huellitas.API.Data.Entities.Pet", "Pet")
+                        .WithMany("PetPhotos")
+                        .HasForeignKey("PetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Vehicle");
+                    b.Navigation("Pet");
                 });
 
             modelBuilder.Entity("huellitas.API.Data.Entities.User", b =>
@@ -535,6 +537,11 @@ namespace huellitas.API.Migrations
             modelBuilder.Entity("huellitas.API.Data.Entities.DocumentType", b =>
                 {
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("huellitas.API.Data.Entities.Pet", b =>
+                {
+                    b.Navigation("PetPhotos");
                 });
 
             modelBuilder.Entity("huellitas.API.Data.Entities.PetType", b =>
