@@ -151,7 +151,6 @@ namespace huellitas.API.Migrations
                 });
 
             modelBuilder.Entity("huellitas.API.Data.Entities.Billing", b =>
-            modelBuilder.Entity("huellitas.API.Data.Entities.AppointmentType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
