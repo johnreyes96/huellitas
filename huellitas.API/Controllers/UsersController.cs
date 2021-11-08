@@ -404,5 +404,53 @@ namespace huellitas.API.Controllers
             return View(model);
 
         }
+
+        public async Task<IActionResult> Appointments(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+
+            User user = await _context.Users
+                .Include(x => x.DocumentType)
+                .Include(x => x.pets)
+                .ThenInclude(x => x.petType)
+                .Include(x => x.Appointments)
+                .ThenInclude(x => x.AppointmentType)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
+        }
+
+        public async Task<IActionResult> AddAppointment(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+
+            User user = await _context.Users
+                .Include(x => x.Appointments)
+                .ThenInclude(x => x.AppointmentType)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            AppointmentViewModel model = new AppointmentViewModel
+            {
+                //Brands = _combosHelper.GetComboBrands(),
+                //UserId = user.Id,
+                //VehicleTypes = _combosHelper.GetComboVehicleTypes()
+            };
+
+            return View(model);
+        }
     }
 }

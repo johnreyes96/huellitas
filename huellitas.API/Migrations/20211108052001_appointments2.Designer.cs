@@ -10,7 +10,7 @@ using huellitas.API.Data;
 namespace huellitas.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20211108043553_appointments2")]
+    [Migration("20211108052001_appointments2")]
     partial class appointments2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -159,6 +159,9 @@ namespace huellitas.API.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("AppointmentTypeId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
@@ -167,6 +170,8 @@ namespace huellitas.API.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppointmentTypeId");
 
                     b.HasIndex("UserId");
 
@@ -520,11 +525,17 @@ namespace huellitas.API.Migrations
 
             modelBuilder.Entity("huellitas.API.Data.Entities.Appointment", b =>
                 {
+                    b.HasOne("huellitas.API.Data.Entities.AppointmentType", "AppointmentType")
+                        .WithMany()
+                        .HasForeignKey("AppointmentTypeId");
+
                     b.HasOne("huellitas.API.Data.Entities.User", "User")
                         .WithMany("Appointments")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("AppointmentType");
 
                     b.Navigation("User");
                 });

@@ -1,17 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace huellitas.API.Data.Entities
+namespace huellitas.API.Models
 {
-    public class Appointment
+    public class AppointmentViewModel
     {
         public int Id { get; set; }
 
-        [Display(Name = "Dueño de mascota")]
-        [JsonIgnore]
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        public User User { get; set; }
+        public int UserId { get; set; }
 
         [Display(Name = "Fecha")]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd hh:mm tt}")]
@@ -20,6 +18,8 @@ namespace huellitas.API.Data.Entities
 
         [Display(Name = "Tipo de cita")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        public AppointmentType AppointmentType { get; set; }
+        public int AppointmentTypeId { get; set; }
+
+        public IEnumerable<SelectListItem> AppointmentTypes { get; set; }
     }
 }

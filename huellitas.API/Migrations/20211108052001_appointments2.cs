@@ -45,26 +45,6 @@ namespace huellitas.API.Migrations
                 oldMaxLength: 50);
 
             migrationBuilder.CreateTable(
-                name: "Appointments",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Appointments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Appointments_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AppointmentTypes",
                 columns: table => new
                 {
@@ -120,6 +100,33 @@ namespace huellitas.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Appointments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AppointmentTypeId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Appointments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Appointments_AppointmentTypes_AppointmentTypeId",
+                        column: x => x.AppointmentTypeId,
+                        principalTable: "AppointmentTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Appointments_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "BillingDetail",
                 columns: table => new
                 {
@@ -139,6 +146,11 @@ namespace huellitas.API.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Appointments_AppointmentTypeId",
+                table: "Appointments",
+                column: "AppointmentTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Appointments_UserId",
@@ -209,13 +221,13 @@ namespace huellitas.API.Migrations
                 name: "Appointments");
 
             migrationBuilder.DropTable(
-                name: "AppointmentTypes");
-
-            migrationBuilder.DropTable(
                 name: "BillingDetail");
 
             migrationBuilder.DropTable(
                 name: "PetPhotos");
+
+            migrationBuilder.DropTable(
+                name: "AppointmentTypes");
 
             migrationBuilder.DropTable(
                 name: "Billings");

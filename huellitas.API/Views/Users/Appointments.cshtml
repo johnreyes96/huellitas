@@ -1,0 +1,128 @@
+﻿@model huellitas.API.Data.Entities.User
+
+@{
+    ViewData["Title"] = "Appointments";
+}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+<div>
+    <h3>Usuario</h3>
+    <hr />
+    <div class="row">
+        <div class="col-md-8">
+            <dl class="row">
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.FullName)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.FullName)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.DocumentType.Description)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.DocumentType.Description)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Document)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Document)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Email)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Email)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Address)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Address)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.PhoneNumber)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.PhoneNumber)
+                </dd>
+            </dl>
+        </div>
+        <div class="col-md-4">
+            <img src="@Model.ImageFullPath" style="width: 200px; height: 200px; border-radius: 150px;" />
+        </div>
+    </div>
+</div>
+<div>
+    <a asp-action="AddAppointment" asp-route-id="@Model.Id" class="btn btn-primary">Adicionar Cita</a>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Editar Usuario</a>
+    <a asp-action="Index" class="btn btn-success">Regresar</a>
+</div>
+<br />
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Citas</h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-hover table-responsive table-striped" id="MyTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Appointments.FirstOrDefault().Date)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Appointments.FirstOrDefault().AppointmentType.Description)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Appointments)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Date)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.AppointmentType.Description)
+                                </td>
+                                <td>
+                                    <a asp-action="EditAppointment" asp-route-id="@item.Id" class="btn btn-warning">Editar</a>
+                                    <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog">Borrar</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<partial name="_DeleteDialog" />
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="/js/deleteDialog.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#MyTable').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                },
+                "aLengthMenu": [
+                    [25, 50, 100, 200, -1],
+                    [25, 50, 100, 200, "Todos"]
+                ]
+            });
+            // Delete item
+            sc_deleteDialog.openModal('deleteItem', true, 'btnYesDelete', '/Users/DeleteAppointment/', false);
+        });
+    </script>
+}
