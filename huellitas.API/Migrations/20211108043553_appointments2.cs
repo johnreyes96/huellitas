@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace huellitas.API.Migrations
 {
-    public partial class huellitas : Migration
+    public partial class appointments2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -43,6 +43,39 @@ namespace huellitas.API.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(50)",
                 oldMaxLength: 50);
+
+            migrationBuilder.CreateTable(
+                name: "Appointments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Appointments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Appointments_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppointmentTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Description = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppointmentTypes", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "Billings",
@@ -108,6 +141,17 @@ namespace huellitas.API.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Appointments_UserId",
+                table: "Appointments",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppointmentTypes_Description",
+                table: "AppointmentTypes",
+                column: "Description",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_BillingDetail_BillingId",
                 table: "BillingDetail",
                 column: "BillingId");
@@ -160,6 +204,12 @@ namespace huellitas.API.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_Pets_PetTypes_petTypeId",
                 table: "Pets");
+
+            migrationBuilder.DropTable(
+                name: "Appointments");
+
+            migrationBuilder.DropTable(
+                name: "AppointmentTypes");
 
             migrationBuilder.DropTable(
                 name: "BillingDetail");

@@ -150,6 +150,47 @@ namespace huellitas.API.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("huellitas.API.Data.Entities.Appointment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Appointments");
+                });
+
+            modelBuilder.Entity("huellitas.API.Data.Entities.AppointmentType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Description")
+                        .IsUnique();
+
+                    b.ToTable("AppointmentTypes");
+                });
+
             modelBuilder.Entity("huellitas.API.Data.Entities.Billing", b =>
                 {
                     b.Property<int>("Id")
@@ -203,17 +244,6 @@ namespace huellitas.API.Migrations
                         .IsUnique();
 
                     b.ToTable("BillingDetail");
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Description")
-                        .IsUnique();
-
-                    b.ToTable("AppointmentTypes");
                 });
 
             modelBuilder.Entity("huellitas.API.Data.Entities.DocumentType", b =>
@@ -486,6 +516,17 @@ namespace huellitas.API.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("huellitas.API.Data.Entities.Appointment", b =>
+                {
+                    b.HasOne("huellitas.API.Data.Entities.User", "User")
+                        .WithMany("Appointments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("huellitas.API.Data.Entities.Billing", b =>
                 {
                     b.HasOne("huellitas.API.Data.Entities.User", "User")
@@ -562,6 +603,8 @@ namespace huellitas.API.Migrations
 
             modelBuilder.Entity("huellitas.API.Data.Entities.User", b =>
                 {
+                    b.Navigation("Appointments");
+
                     b.Navigation("pets");
                 });
 #pragma warning restore 612, 618
