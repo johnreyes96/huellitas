@@ -9,7 +9,7 @@ namespace huellitas.API.Models
     {
         public int Id { get; set; }
 
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         [Display(Name = "Fecha")]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd hh:mm tt}")]
@@ -17,6 +17,7 @@ namespace huellitas.API.Models
         public DateTime Date { get; set; }
 
         [Display(Name = "Tipo de cita")]
+        [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar un tipo de cita.")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public int AppointmentTypeId { get; set; }
 

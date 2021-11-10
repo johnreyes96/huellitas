@@ -445,12 +445,55 @@ namespace huellitas.API.Controllers
 
             AppointmentViewModel model = new AppointmentViewModel
             {
-                //Brands = _combosHelper.GetComboBrands(),
-                //UserId = user.Id,
-                //VehicleTypes = _combosHelper.GetComboVehicleTypes()
+                AppointmentTypes = _combosHelper.GetComboAppointmentTypes(),
+                UserId = user.Id
             };
 
             return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddAppointment(AppointmentViewModel appointmentViewModel)
+        {
+            User user = await _context.Users
+            .Include(x => x.Appointments)
+            .ThenInclude(x => x.AppointmentType)
+            .FirstOrDefaultAsync(x => x.Id == appointmentViewModel.UserId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            Appointment appointment = await _context.Appointments
+                .Include(x => x.AppointmentType)
+                .FirstOrDefaultAsync(x => x.Date >= DateTime.UtcNow
+                && x.AppointmentType.Id == appointmentViewModel.AppointmentTypeId);
+            if (appointment != null)
+            {
+                ModelState.AddModelError(string.Empty, "Ya tienes una " + appointment.AppointmentType.Description + " para el día " + appointment.Date);
+            }
+            else
+            {
+
+                appointment = await _converterHelper.ToAppointmentAsync(appointmentViewModel, true);
+
+                try
+                {
+                    user.Appointments.Add(appointment);
+                    _context.Users.Update(user);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Appointments), new { id = user.Id });
+                }
+                catch (Exception exception)
+                {
+                    ModelState.AddModelError(string.Empty, exception.Message);
+                }
+
+            }
+
+            appointmentViewModel.AppointmentTypes = _combosHelper.GetComboAppointmentTypes();
+            return View(appointmentViewModel);
         }
     }
 }

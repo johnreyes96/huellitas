@@ -15,6 +15,23 @@ namespace huellitas.API.Helpers
             _context = context;
         }
 
+        public IEnumerable<SelectListItem> GetComboAppointmentTypes()
+        {
+
+            List<SelectListItem> list = _context.AppointmentTypes.Select(x => new SelectListItem
+            {
+                Text = x.Description,
+                Value = $"{x.Id}"
+            }).OrderBy(x => x.Text).ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "[Seleccione un tipo de cita...]",
+                Value = "0"
+            });
+            return list;
+        }
+
         public IEnumerable<SelectListItem> GetComboDocumentTypes()
         {
         
