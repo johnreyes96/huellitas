@@ -32,7 +32,7 @@ namespace huellitas.API.Helpers
         {
             return new AppointmentViewModel
             {
-                Date = appointment.Date,
+                Date = appointment.Date.ToLocalTime(),
                 AppointmentTypes = _combosHelper.GetComboAppointmentTypes(),
                 AppointmentTypeId = appointment.AppointmentType.Id,
                 Id = appointment.Id,

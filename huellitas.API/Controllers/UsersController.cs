@@ -446,6 +446,7 @@ namespace huellitas.API.Controllers
             AppointmentViewModel model = new AppointmentViewModel
             {
                 AppointmentTypes = _combosHelper.GetComboAppointmentTypes(),
+                Date = DateTime.Parse(DateTime.Now.ToString("MM/dd/yyyy HH:mm")),
                 UserId = user.Id
             };
 
@@ -465,35 +466,158 @@ namespace huellitas.API.Controllers
                 return NotFound();
             }
 
-            Appointment appointment = await _context.Appointments
-                .Include(x => x.AppointmentType)
-                .FirstOrDefaultAsync(x => x.Date >= DateTime.UtcNow
-                && x.AppointmentType.Id == appointmentViewModel.AppointmentTypeId);
-            if (appointment != null)
+            if (appointmentViewModel.Date < DateTime.Now)
             {
-                ModelState.AddModelError(string.Empty, "Ya tienes una " + appointment.AppointmentType.Description + " para el día " + appointment.Date);
-            }
+                ModelState.AddModelError(string.Empty, "La fecha de la cita debe ser mayor o igual a la fecha actual");
+            } 
             else
             {
-
-                appointment = await _converterHelper.ToAppointmentAsync(appointmentViewModel, true);
-
-                try
+                Appointment appointment = await _context.Appointments
+                .Include(x => x.AppointmentType)
+                .Include(x => x.User)
+                .FirstOrDefaultAsync(x => x.Date >= DateTime.UtcNow
+                && x.AppointmentType.Id == appointmentViewModel.AppointmentTypeId
+                && x.User.Id == appointmentViewModel.UserId);
+                if (appointment != null)
                 {
-                    user.Appointments.Add(appointment);
-                    _context.Users.Update(user);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Appointments), new { id = user.Id });
+                    ModelState.AddModelError(string.Empty, "Ya tienes una " + appointment.AppointmentType.Description + " para el día " + appointment.Date);
                 }
-                catch (Exception exception)
+                else
                 {
-                    ModelState.AddModelError(string.Empty, exception.Message);
-                }
+                    List<Appointment> appointments = await _context.Appointments
+                   .Include(x => x.AppointmentType)
+                   .Include(x => x.User)
+                   .Where(x => x.Date == appointmentViewModel.Date.ToUniversalTime()
+                   && x.AppointmentType.Id == appointmentViewModel.AppointmentTypeId)
+                   .ToListAsync();
+                    if (appointments != null && appointments.Count >= 1)
+                    {
+                        ModelState.AddModelError(string.Empty, "Ya no hay mas citas disponibles para la fecha y hora seleccionada");
+                    } 
+                    else
+                    {
+                        appointment = await _converterHelper.ToAppointmentAsync(appointmentViewModel, true);
 
+                        try
+                        {
+                            user.Appointments.Add(appointment);
+                            _context.Users.Update(user);
+                            await _context.SaveChangesAsync();
+                            return RedirectToAction(nameof(Appointments), new { id = user.Id });
+                        }
+                        catch (Exception exception)
+                        {
+                            ModelState.AddModelError(string.Empty, exception.Message);
+                        }
+                    }
+
+                }
             }
 
             appointmentViewModel.AppointmentTypes = _combosHelper.GetComboAppointmentTypes();
             return View(appointmentViewModel);
+        }
+
+        public async Task<IActionResult> EditAppointment(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            Appointment appointment = await _context.Appointments
+                .Include(x => x.AppointmentType)
+                .Include(x => x.User)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            if (appointment == null)
+            {
+                return NotFound();
+            }
+
+            AppointmentViewModel model = _converterHelper.ToAppointmentViewModel(appointment);
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditAppointment(int id, AppointmentViewModel appointmentViewModel)
+        {
+            if (id != appointmentViewModel.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                if (appointmentViewModel.Date < DateTime.Now)
+                {
+                    ModelState.AddModelError(string.Empty, "La fecha de la cita debe ser mayor o igual a la fecha actual");
+                }
+                else
+                {
+                    Appointment appointment = await _context.Appointments
+                    .Include(x => x.AppointmentType)
+                    .Include(x => x.User)
+                    .FirstOrDefaultAsync(x => x.Date >= DateTime.UtcNow
+                    && x.AppointmentType.Id == appointmentViewModel.AppointmentTypeId
+                    && x.Id != appointmentViewModel.Id
+                    && x.User.Id == appointmentViewModel.UserId);
+                    if (appointment != null)
+                        {
+                            ModelState.AddModelError(string.Empty, "Ya tienes una " + appointment.AppointmentType.Description + " para el día " + appointment.Date);
+                        }
+                        else
+                        {
+                            List<Appointment> appointments = await _context.Appointments
+                           .Include(x => x.AppointmentType)
+                           .Include(x => x.User)
+                           .Where(x => x.Date == appointmentViewModel.Date.ToUniversalTime()
+                           && x.AppointmentType.Id == appointmentViewModel.AppointmentTypeId)
+                           .ToListAsync();
+                            if (appointments != null && appointments.Count >= 1)
+                            {
+                                ModelState.AddModelError(string.Empty, "Ya no hay mas citas disponibles para la fecha y hora seleccionada");
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    appointment = await _converterHelper.ToAppointmentAsync(appointmentViewModel, false);
+                                    _context.Appointments.Update(appointment);
+                                    await _context.SaveChangesAsync();
+                                    return RedirectToAction(nameof(Appointments), new { id = appointmentViewModel.UserId });
+                                }
+                                catch (Exception exception)
+                                {
+                                    ModelState.AddModelError(string.Empty, exception.Message);
+                                }
+                            }
+                        }
+                }
+            }
+
+            appointmentViewModel.AppointmentTypes = _combosHelper.GetComboAppointmentTypes();
+            return View(appointmentViewModel);
+        }
+
+        public async Task<IActionResult> DeleteAppointment(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            Appointment appointment = await _context.Appointments
+                .Include(x => x.User)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            if (appointment == null)
+            {
+                return NotFound();
+            }
+
+            _context.Appointments.Remove(appointment);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Appointments), new { id = appointment.User.Id });
         }
     }
 }
