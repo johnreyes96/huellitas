@@ -10,6 +10,7 @@ namespace huellitas.API.Data
         {
         }
 
+        public DbSet<Appointment> Appointments { get; set; }
         public DbSet<AppointmentType> AppointmentTypes { get; set; }
         public DbSet<DocumentType> DocumentTypes { get; set; }
         public DbSet<PetType> PetTypes { get; set; }

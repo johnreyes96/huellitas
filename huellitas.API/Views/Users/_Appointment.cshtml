@@ -1,0 +1,17 @@
+﻿@model huellitas.API.Models.AppointmentViewModel
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label asp-for="Date" class="control-label"></label>
+            <input asp-for="Date" class="form-control" />
+            <span asp-validation-for="Date" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="AppointmentTypeId" class="control-label"></label>
+            <select asp-for="AppointmentTypeId" asp-items="Model.AppointmentTypes" class="form-control"></select>
+            <span asp-validation-for="AppointmentTypeId" class="text-danger"></span>
+        </div>
+    </div>
+</div>

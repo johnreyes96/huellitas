@@ -49,5 +49,6 @@ namespace huellitas.API.Data.Entities
 
         [Display(Name = "# Mascotas")]
         public int petsCount => pets == null ? 0 : pets.Count;
+        public ICollection<Appointment> Appointments { get; set; }
     }
 }

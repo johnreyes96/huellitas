@@ -17,6 +17,29 @@ namespace huellitas.API.Helpers
             _combosHelper = combosHelper;
         }
 
+        public async Task<Appointment> ToAppointmentAsync(AppointmentViewModel model, bool isNew)
+        {
+            return new Appointment
+            {
+                Id = isNew ? 0 : model.Id,
+                Date = model.Date.ToUniversalTime(),
+                AppointmentType = await _context.AppointmentTypes.FindAsync(model.AppointmentTypeId),
+                User = await _context.Users.FindAsync(model.UserId)
+            };
+        }
+
+        public AppointmentViewModel ToAppointmentViewModel(Appointment appointment)
+        {
+            return new AppointmentViewModel
+            {
+                Date = appointment.Date.ToLocalTime(),
+                AppointmentTypes = _combosHelper.GetComboAppointmentTypes(),
+                AppointmentTypeId = appointment.AppointmentType.Id,
+                Id = appointment.Id,
+                UserId = appointment.User.Id
+            };
+        }
+
         public async Task<User> ToUserAsync(UserViewModel model, Guid imageId, bool isNew)
         {
             return new User
