@@ -10,13 +10,8 @@ using huellitas.API.Data;
 namespace huellitas.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-<<<<<<< HEAD:huellitas.API/Migrations/20211114011744_huellitas.Designer.cs
-    [Migration("20211114011744_huellitas")]
+    [Migration("20211114015928_huellitas")]
     partial class huellitas
-=======
-    [Migration("20211108052001_appointments2")]
-    partial class appointments2
->>>>>>> master:huellitas.API/Migrations/20211108052001_appointments2.Designer.cs
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -157,8 +152,6 @@ namespace huellitas.API.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-<<<<<<< HEAD:huellitas.API/Migrations/20211114011744_huellitas.Designer.cs
-=======
             modelBuilder.Entity("huellitas.API.Data.Entities.Appointment", b =>
                 {
                     b.Property<int>("Id")
@@ -185,7 +178,6 @@ namespace huellitas.API.Migrations
                     b.ToTable("Appointments");
                 });
 
->>>>>>> master:huellitas.API/Migrations/20211108052001_appointments2.Designer.cs
             modelBuilder.Entity("huellitas.API.Data.Entities.AppointmentType", b =>
                 {
                     b.Property<int>("Id")
