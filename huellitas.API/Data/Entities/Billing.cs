@@ -38,6 +38,10 @@ namespace huellitas.API.Data.Entities
         [Display(Name = "# Servicios")]
         public int BillingDetailsCount => BillingDetails == null ? 0 : BillingDetails.Count;
 
+        [Display(Name = "Observación")]
+        [DataType(DataType.MultilineText)]
+        public string Remarks { get; set; }
+
 
 
     }

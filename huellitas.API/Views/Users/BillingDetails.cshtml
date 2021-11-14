@@ -1,60 +1,47 @@
-﻿@model huellitas.API.Data.Entities.Pet
+﻿@model huellitas.API.Data.Entities.Billing
 
 @{
-    ViewData["Title"] = "Billing";
+    ViewData["Title"] = "BillingDetails";
 }
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
 <h2>Factura</h2>
 
 <div>
-    <h4>Mascotas</h4>
+    <h4>Encabezado Factura</h4>
     <hr />
     <div class="row">
         <div class="col-md-8">
             <dl class="row">
                 <dt class="col-sm-3">
-                    @Html.DisplayNameFor(model => model.petType.Description)
+                    @Html.DisplayNameFor(model => model.Pet.Name)
                 </dt>
                 <dd class="col-sm-9">
-                    @Html.DisplayFor(model => model.petType.Description)
+                    @Html.DisplayFor(model => model.Pet.Name)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Date)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Date)
                 </dd>
                 
                 <dt class="col-sm-3">
-                    @Html.DisplayNameFor(model => model.Name)
+                    @Html.DisplayNameFor(model => model.TotalValue)
                 </dt>
                 <dd class="col-sm-9">
-                    @Html.DisplayFor(model => model.Name)
-                </dd>
-                <dt class="col-sm-3">
-                    @Html.DisplayNameFor(model => model.Race)
-                </dt>
-                <dd class="col-sm-9">
-                    @Html.DisplayFor(model => model.Race)
-                </dd>
-                <dt class="col-sm-3">
-                    @Html.DisplayNameFor(model => model.Color)
-                </dt>
-                <dd class="col-sm-9">
-                    @Html.DisplayFor(model => model.Color)
-                </dd>
-                <dt class="col-sm-3">
-                    @Html.DisplayNameFor(model => model.Observations)
-                </dt>
-                <dd class="col-sm-9">
-                    @Html.DisplayFor(model => model.Observations)
+                    @Html.DisplayFor(model => model.TotalValue)
                 </dd>
             </dl>
         </div>
         <div class="col-md-4">
-            <img src="@Model.ImageFullPath" style="width: 200px; height: 200px; max-width: 100%; height: auto;" />
+            <img src="@Model.Pet.ImageFullPath" style="width: 200px; height: 200px; max-width: 100%; height: auto;" />
         </div>
     </div>
 </div>
 <div>
-    <a asp-action="BillingDetails" asp-route-id="@Model.Id" class="btn btn-primary">Adicionar Factura</a>
-    <a asp-action="EditPet" asp-route-id="@Model.Id" class="btn btn-warning">Editar Mascota</a>
-    <a asp-action="Pets" asp-route-id="@Model.User.Id" class="btn btn-success">Regresar</a>
+    <a asp-action="AddBillingDetail" asp-route-id="@Model.Id" class="btn btn-primary">Adicionar Servicio</a>
+    <a asp-action="BillingPet" asp-route-id="@Model.Pet.Id" class="btn btn-success">Regresar</a>
 </div>
 <br />
 
@@ -62,45 +49,51 @@
     <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Facturas</h3>
+                <h3 class="panel-title">Detalle Factura</h3>
             </div>
             <div class="panel-body">
                 <table class="table table-hover table-responsive table-striped" id="MyTable">
                     <thead>
                         <tr>
                             <th>
-                                @Html.DisplayNameFor(model => model.Billings.FirstOrDefault().Date)
+                                @Html.DisplayNameFor(model => model.BillingDetails.FirstOrDefault().Service.Description)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Billings.FirstOrDefault().User.FullName)
-                            </th>
-                           <th>
-                                @Html.DisplayNameFor(model => model.Billings.FirstOrDefault().BillingDetailsCount)
+                                @Html.DisplayNameFor(model => model.BillingDetails.FirstOrDefault().ServiceDetail.Description)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Billings.FirstOrDefault().TotalValue)
+                                @Html.DisplayNameFor(model => model.BillingDetails.FirstOrDefault().Quantity)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.BillingDetails.FirstOrDefault().UnitValue)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.BillingDetails.FirstOrDefault().ValueSubtotal)
                             </th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model.Billings)
+                        @foreach (var item in Model.BillingDetails)
                         {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.DateLocal)
+                                    @Html.DisplayFor(modelItem => item.Service.Description)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.User.FullName)
+                                    @Html.DisplayFor(modelItem => item.ServiceDetail.Description)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.BillingDetailsCount)
+                                    @Html.DisplayFor(modelItem => item.Quantity)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.TotalValue)
+                                    @Html.DisplayFor(modelItem => item.UnitValue)
                                 </td>
                                 <td>
-                                    <a asp-action="BillingDetails" asp-route-id="@item.Id" class="btn btn-info">Detalle Factura<i class="glyphicon glyphicon-align-justify"></i></a>
+                                    @Html.DisplayFor(modelItem => item.ValueSubtotal)
+                                </td>
+                                <td>
+                                    <a asp-action="EditBillingDetail" asp-route-id="@item.Id" class="btn btn-warning">Editar</a>
                                     <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog">Borrar</button>
                                 </td>
                             </tr>
@@ -128,14 +121,10 @@
                 "aLengthMenu": [
                     [25, 50, 100, 200, -1],
                     [25, 50, 100, 200, "Todos"]
-                ],
-                "order": [[0, "desc"]]
+                ]
             });
             // Delete item
-            sc_deleteDialog.openModal('deleteItem', true, 'btnYesDelete', '/Users/DeleteBilling/', false);
+            sc_deleteDialog.openModal('deleteItem', true, 'btnYesDelete', '/Users/DeletePetDetail/', false);
         });
     </script>
 }
-
-
-

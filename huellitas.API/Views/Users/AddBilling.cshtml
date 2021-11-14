@@ -1,0 +1,30 @@
+﻿@model huellitas.API.Models.BillingViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Crear</h2>
+
+<h4>Factura</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="AddBilling" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="PetId" />
+
+            <partial name="_Billing" />
+
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn btn-primary" />
+                <a asp-action="BillingPet" asp-route-id="@Model.PetId" class="btn btn-success">Regresar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

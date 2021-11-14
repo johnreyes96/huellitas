@@ -10,7 +10,7 @@ using huellitas.API.Data;
 namespace huellitas.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20211104051134_huellitas")]
+    [Migration("20211114011744_huellitas")]
     partial class huellitas
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -184,6 +184,9 @@ namespace huellitas.API.Migrations
 
                     b.Property<int>("PetId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Remarks")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
