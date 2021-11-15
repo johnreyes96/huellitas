@@ -10,5 +10,8 @@ namespace huellitas.API.Helpers
         IEnumerable<SelectListItem> GetComboDocumentTypes();
 
         IEnumerable<SelectListItem> GetComboPetTypes();
+
+        IEnumerable<SelectListItem> GetComboServices();
+
     }
 }

@@ -1,0 +1,27 @@
+﻿@model huellitas.API.Models.BillingDetailViewModel
+
+<div class="form-group">
+    <label asp-for="ServiceId" class="control-label"></label>
+    <select asp-for="ServiceId" asp-items="Model.Services" class="form-control"></select>
+    <span asp-validation-for="ServiceId" class="text-danger"></span>
+</div>
+
+<div class="form-group">
+    <label asp-for="serviceDetail.Description" class="control-label"></label>
+    <textarea asp-for="serviceDetail.Description" class="form-control"></textarea>
+    <span asp-validation-for="serviceDetail.Description" class="text-danger"></span>
+</div>
+
+
+<div class="form-group">
+    <label asp-for="Quantity" class="control-label"></label>
+    <input asp-for="Quantity" class="form-control" />
+    <span asp-validation-for="Quantity" class="text-danger"></span>
+</div>
+
+<div class="form-group">
+    <label asp-for="UnitValue" class="control-label"></label>
+    <input asp-for="UnitValue" class="form-control" />
+    <span asp-validation-for="UnitValue" class="text-danger"></span>
+</div>
+

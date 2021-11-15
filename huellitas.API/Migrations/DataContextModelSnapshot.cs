@@ -209,9 +209,6 @@ namespace huellitas.API.Migrations
                     b.Property<int>("PetId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Remarks")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 

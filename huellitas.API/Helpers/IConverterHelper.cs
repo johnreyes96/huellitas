@@ -18,6 +18,8 @@ namespace huellitas.API.Helpers
 
         PetViewModel ToPetViewModel(Pet pet);
 
+        Task<BillingDetail> ToBillingDetailAsync(BillingDetailViewModel model, bool isNew);
+
 
     }
 }

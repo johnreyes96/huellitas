@@ -11,7 +11,7 @@ namespace huellitas.API.Data.Entities
     {
         public int Id { get; set; }
 
-        [Display(Name = "Numero Factura")]
+        [Display(Name = "Factura")]
         [JsonIgnore]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public Billing Billing { get; set; }

@@ -643,6 +643,8 @@ namespace huellitas.API.Controllers
         }
 
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddBilling(int? id)
         {
             if (id == null)
@@ -659,23 +661,14 @@ namespace huellitas.API.Controllers
             BillingViewModel model = new BillingViewModel
             {
                 PetId = pet.Id
+                
             };
 
-            return View(model);
-        }
-
-
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddBilling(BillingViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                Pet pet = await _context.Pets
+            
+                Pet pets = await _context.Pets
                     .Include(x => x.Billings)
                     .FirstOrDefaultAsync(x => x.Id == model.PetId);
-                if (pet == null)
+                if (pets == null)
                 {
                     return NotFound();
                 }
@@ -684,7 +677,6 @@ namespace huellitas.API.Controllers
                 Billing billing = new Billing
                 {
                     Date = DateTime.UtcNow,
-                    Remarks = model.Remarks,
                     User = user
                 };
 
@@ -697,10 +689,11 @@ namespace huellitas.API.Controllers
                 _context.Pets.Update(pet);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(BillingPet), new { id = pet.Id });
-            }
-
-            return View(model);
+            
         }
+
+
+
 
         public async Task<IActionResult> BillingDetails(int? id)
         {
@@ -722,5 +715,62 @@ namespace huellitas.API.Controllers
 
             return View(billing);
         }
+
+        public async Task<IActionResult> AddBillingDetail(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            Billing billing = await _context.Billings.FindAsync(id);
+            if (billing == null)
+            {
+                return NotFound();
+            }
+
+            BillingDetailViewModel model = new BillingDetailViewModel
+            {
+                BillingId = billing.Id,
+                Services = _combosHelper.GetComboServices()
+            };
+
+            return View(model);
+        }
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddBillingDetail(BillingDetailViewModel billingDetailViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                Billing billing = await _context.Billings
+                    .Include(x => x.BillingDetails)
+                    .FirstOrDefaultAsync(x => x.Id == billingDetailViewModel.BillingId);
+                if (billing == null)
+                {
+                    return NotFound();
+                }
+
+                if (billing.BillingDetails == null)
+                {
+                    billing.BillingDetails = new List<BillingDetail>();
+                }
+
+                BillingDetail detailBilling = await _converterHelper.ToBillingDetailAsync(billingDetailViewModel, true);
+                billing.BillingDetails.Add(detailBilling);
+                _context.Billings.Update(billing);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(BillingDetails), new { id = billingDetailViewModel.BillingId});
+            }
+
+            billingDetailViewModel.Services = _combosHelper.GetComboServices();
+            return View(billingDetailViewModel);
+        }
+
+
     }
 }

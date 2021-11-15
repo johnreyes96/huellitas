@@ -108,5 +108,20 @@ namespace huellitas.API.Helpers
                 UserId = pet.User.Id
             };
         }
+
+
+
+        public async Task<BillingDetail> ToBillingDetailAsync(BillingDetailViewModel model, bool isNew)
+        {
+            return new BillingDetail
+            {
+                Id = isNew ? 0 : model.Id,
+                Service = await _context.Services.FindAsync(model.ServiceId),
+                Billing = await _context.Billings.FindAsync(model.BillingId),
+                Quantity = model.Quantity,
+                ServiceDetail = await _context.ServicesDetails.FindAsync(model.serviceDetail),
+                UnitValue = model.UnitValue
+            };
+        }
     }
 }
