@@ -446,7 +446,7 @@ namespace huellitas.API.Controllers
             AppointmentViewModel model = new AppointmentViewModel
             {
                 AppointmentTypes = _combosHelper.GetComboAppointmentTypes(),
-                Date = DateTime.Parse(DateTime.Now.ToString("dd/MM/yyyy HH:mm")),
+                Date = DateTime.Parse(DateTime.Now.ToString("MM/dd/yyyy HH:mm")),
                 UserId = user.Id
             };
 
