@@ -22,7 +22,7 @@ namespace huellitas.API.Data.Entities
 
         [Display(Name = "Foto")]
         public string ImageFullPath => ImageId == Guid.Empty
-            ? $"https://huellitasapi.azurewebsites.net/images/no_image.png"
-            : $"https://huellitas.blob.core.windows.net/petphotos/{ImageId}";
+            ? $"https://apihuellitas.azurewebsites.net/images/no_image.png"
+            : $"https://huellitasapi.blob.core.windows.net/petphotos/{ImageId}";
     }
 }
