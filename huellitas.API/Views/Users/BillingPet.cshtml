@@ -53,8 +53,17 @@
 </div>
 <div>
     <div>
-        <input type="submit" value="Crear Factura" class="btn btn-primary" />
-        <a asp-action="AddBilling" asp-route-id="@Model.Id"></a>
+        <form asp-action="AddBilling">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="@Model.Id" />
+
+           
+
+            <div class="form-group">
+                <input type="submit" value="Crear Factura" class="btn btn-primary" />
+                <a asp-action="AddBilling" asp-route-id="@Model.Id"></a>
+            </div>
+        </form>
     </div>
     <a asp-action="EditPet" asp-route-id="@Model.Id" class="btn btn-warning">Editar Mascota</a>
     <a asp-action="Pets" asp-route-id="@Model.User.Id" class="btn btn-success">Regresar</a>
