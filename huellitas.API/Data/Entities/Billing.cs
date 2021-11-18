@@ -31,7 +31,7 @@ namespace huellitas.API.Data.Entities
         
         [Display(Name = "Valor Total")]
         [DisplayFormat(DataFormatString = "{0:C2}")]
-        public int TotalValue => BillingDetails == null ? 0 : BillingDetails.Sum(x => (x.ValueSubtotal*19/100) + x.ValueSubtotal);
+        public int TotalValue => BillingDetails == null ? 0 : BillingDetails.Sum(x => x.ValueSubtotal);
 
         public ICollection<BillingDetail> BillingDetails { get; set; }
 

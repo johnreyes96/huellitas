@@ -84,7 +84,7 @@
                                 @Html.DisplayNameFor(model => model.Billings.FirstOrDefault().Date)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Billings.FirstOrDefault().User.FullName)
+                                @Html.DisplayNameFor(model => model.User.FullName)
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.Billings.FirstOrDefault().BillingDetailsCount)
@@ -103,7 +103,7 @@
                                 @Html.DisplayFor(modelItem => item.DateLocal)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.User.FullName)
+                                @Html.DisplayFor(model => model.User.FullName)
                             </td>
                             
                             <td>

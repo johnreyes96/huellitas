@@ -154,6 +154,8 @@ namespace huellitas.API.Controllers
                 .ThenInclude(x => x.petType )
                 .Include(x => x.pets)
                 .ThenInclude(x => x.PetPhotos)
+                .Include(x => x.pets)
+                .ThenInclude(x => x.Billings)
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (user == null)
             {
@@ -632,6 +634,7 @@ namespace huellitas.API.Controllers
                 .Include(x => x.User)
                 .Include(x => x.petType)
                 .Include(x => x.Billings)
+                .ThenInclude(x => x.BillingDetails)
                 .Include(x => x.PetPhotos)
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (pet == null)

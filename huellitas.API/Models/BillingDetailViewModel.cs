@@ -23,17 +23,8 @@ namespace huellitas.API.Models
         public int Quantity { get; set; }
 
 
-        [Display(Name = "Observación")]
-        [DataType(DataType.MultilineText)]
-        public string Remarks { get; set; }
 
         public int BillingId { get; set; }
-
-
-        [Display(Name = "Detalle Servicio")]
-        [DataType(DataType.MultilineText)]
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        public  ServiceDetail serviceDetail { get; set; }
 
         [Display(Name = "Servicio")]
         [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar un servicio.")]

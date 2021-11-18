@@ -58,9 +58,7 @@
                             <th>
                                 @Html.DisplayNameFor(model => model.BillingDetails.FirstOrDefault().Service.Description)
                             </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.BillingDetails.FirstOrDefault().ServiceDetail.Description)
-                            </th>
+                           
                             <th>
                                 @Html.DisplayNameFor(model => model.BillingDetails.FirstOrDefault().Quantity)
                             </th>
@@ -80,9 +78,7 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Service.Description)
                                 </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.ServiceDetail.Description)
-                                </td>
+                                
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Quantity)
                                 </td>
@@ -94,6 +90,7 @@
                                 </td>
                                 <td>
                                     <a asp-action="EditBillingDetail" asp-route-id="@item.Id" class="btn btn-warning">Editar</a>
+                                    <a asp-action="DetailService" asp-route-id="@item.Id" class="btn btn-warning">Detalle Servicio</a>
                                     <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog">Borrar</button>
                                 </td>
                             </tr>

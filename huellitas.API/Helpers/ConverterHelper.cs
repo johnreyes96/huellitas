@@ -119,7 +119,6 @@ namespace huellitas.API.Helpers
                 Service = await _context.Services.FindAsync(model.ServiceId),
                 Billing = await _context.Billings.FindAsync(model.BillingId),
                 Quantity = model.Quantity,
-                ServiceDetail = await _context.ServicesDetails.FindAsync(model.serviceDetail),
                 UnitValue = model.UnitValue
             };
         }

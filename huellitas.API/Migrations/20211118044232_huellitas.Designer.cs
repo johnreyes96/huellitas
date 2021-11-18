@@ -10,7 +10,7 @@ using huellitas.API.Data;
 namespace huellitas.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20211118032532_huellitas")]
+    [Migration("20211118044232_huellitas")]
     partial class huellitas
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -239,9 +239,6 @@ namespace huellitas.API.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ServiceDetailId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ServiceId")
                         .HasColumnType("int");
 
@@ -254,8 +251,6 @@ namespace huellitas.API.Migrations
 
                     b.HasIndex("Id")
                         .IsUnique();
-
-                    b.HasIndex("ServiceDetailId");
 
                     b.HasIndex("ServiceId");
 
@@ -398,10 +393,15 @@ namespace huellitas.API.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int?>("billingDetailId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Id")
                         .IsUnique();
+
+                    b.HasIndex("billingDetailId");
 
                     b.ToTable("ServicesDetails");
                 });
@@ -594,10 +594,6 @@ namespace huellitas.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("huellitas.API.Data.Entities.ServiceDetail", "ServiceDetail")
-                        .WithMany()
-                        .HasForeignKey("ServiceDetailId");
-
                     b.HasOne("huellitas.API.Data.Entities.Service", "Service")
                         .WithMany("BillingDetails")
                         .HasForeignKey("ServiceId")
@@ -607,8 +603,6 @@ namespace huellitas.API.Migrations
                     b.Navigation("Billing");
 
                     b.Navigation("Service");
-
-                    b.Navigation("ServiceDetail");
                 });
 
             modelBuilder.Entity("huellitas.API.Data.Entities.Pet", b =>
@@ -639,6 +633,15 @@ namespace huellitas.API.Migrations
                         .IsRequired();
 
                     b.Navigation("Pet");
+                });
+
+            modelBuilder.Entity("huellitas.API.Data.Entities.ServiceDetail", b =>
+                {
+                    b.HasOne("huellitas.API.Data.Entities.BillingDetail", "billingDetail")
+                        .WithMany()
+                        .HasForeignKey("billingDetailId");
+
+                    b.Navigation("billingDetail");
                 });
 
             modelBuilder.Entity("huellitas.API.Data.Entities.User", b =>

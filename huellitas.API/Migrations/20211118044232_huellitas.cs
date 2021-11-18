@@ -86,19 +86,6 @@ namespace huellitas.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ServicesDetails",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Description = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ServicesDetails", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -316,7 +303,6 @@ namespace huellitas.API.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     BillingId = table.Column<int>(type: "int", nullable: false),
                     ServiceId = table.Column<int>(type: "int", nullable: false),
-                    ServiceDetailId = table.Column<int>(type: "int", nullable: true),
                     UnitValue = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false)
                 },
@@ -335,10 +321,24 @@ namespace huellitas.API.Migrations
                         principalTable: "Services",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ServicesDetails",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Description = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    billingDetailId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServicesDetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BillingDetail_ServicesDetails_ServiceDetailId",
-                        column: x => x.ServiceDetailId,
-                        principalTable: "ServicesDetails",
+                        name: "FK_ServicesDetails_BillingDetail_billingDetailId",
+                        column: x => x.billingDetailId,
+                        principalTable: "BillingDetail",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -415,11 +415,6 @@ namespace huellitas.API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_BillingDetail_ServiceDetailId",
-                table: "BillingDetail",
-                column: "ServiceDetailId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_BillingDetail_ServiceId",
                 table: "BillingDetail",
                 column: "ServiceId");
@@ -468,6 +463,11 @@ namespace huellitas.API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_ServicesDetails_billingDetailId",
+                table: "ServicesDetails",
+                column: "billingDetailId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ServicesDetails_Id",
                 table: "ServicesDetails",
                 column: "Id",
@@ -495,10 +495,10 @@ namespace huellitas.API.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "BillingDetail");
+                name: "PetPhotos");
 
             migrationBuilder.DropTable(
-                name: "PetPhotos");
+                name: "ServicesDetails");
 
             migrationBuilder.DropTable(
                 name: "AppointmentTypes");
@@ -507,13 +507,13 @@ namespace huellitas.API.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "BillingDetail");
+
+            migrationBuilder.DropTable(
                 name: "Billings");
 
             migrationBuilder.DropTable(
                 name: "Services");
-
-            migrationBuilder.DropTable(
-                name: "ServicesDetails");
 
             migrationBuilder.DropTable(
                 name: "Pets");
