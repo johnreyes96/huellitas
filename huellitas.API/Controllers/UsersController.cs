@@ -315,7 +315,7 @@ namespace huellitas.API.Controllers
             }
 
             Pet pet = await _context.Pets
-                .Include(x => x.User)
+                .Include(x=> x.User)
                 .Include(x => x.PetPhotos)
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (pet == null)
@@ -774,6 +774,208 @@ namespace huellitas.API.Controllers
             return View(billingDetailViewModel);
         }
 
+        public async Task<IActionResult> EditBillingDetail(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
+            BillingDetail billingDetail = await _context.BillingDetails
+                .Include(x => x.Billing)
+                .Include(x => x.Service)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (billingDetail == null)
+            {
+                return NotFound();
+            }
+
+            BillingDetailViewModel model = _converterHelper.ToBillingDetailViewModel(billingDetail);
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditBillingDetail(int id, BillingDetailViewModel billingDetailViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                BillingDetail detail = await _converterHelper.ToBillingDetailAsync(billingDetailViewModel, false);
+                _context.BillingDetails.Update(detail);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(BillingDetails), new { id = billingDetailViewModel.Id });
+            }
+
+            billingDetailViewModel.Services = _combosHelper.GetComboServices();
+            return View(billingDetailViewModel);
+        }
+
+        public async Task<IActionResult> DeleteBillingDetail(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            BillingDetail billingDetail = await _context.BillingDetails
+                .Include(x => x.Billing)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            if (billingDetail == null)
+            {
+                return NotFound();
+            }
+
+            _context.BillingDetails.Remove(billingDetail);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(BillingDetails), new { id = billingDetail.Billing.Id });
+        }
+
+        public async Task<IActionResult> DeleteBilling(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            Billing billing = await _context.Billings
+                .Include(x => x.BillingDetails)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            if (billing == null)
+            {
+                return NotFound();
+            }
+
+            _context.Billings.Remove(billing);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(BillingPet), new { id = billing.Id });
+        }
+
+
+
+
+        public async Task<IActionResult> DetailService(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            BillingDetail billingDetail = await _context.BillingDetails
+                .Include(x => x.Billing)
+                .Include(x => x.Service)
+                .Include(x => x.ServiceDetails)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            
+            if (billingDetail == null)
+            {
+                return NotFound();
+            }
+
+            return View(billingDetail);
+        }
+
+
+        public async Task<IActionResult> AddDetailService(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            BillingDetail billingDetail = await _context.BillingDetails.FindAsync(id);
+            if (billingDetail == null)
+            {
+                return NotFound();
+            }
+
+            ServiceDetailViewModel model = new ServiceDetailViewModel
+            {
+                BillingDetailId = billingDetail.Id
+            };
+
+            return View(model);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddDetailService(ServiceDetailViewModel serviceDetailViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                BillingDetail billingDetail = await _context.BillingDetails
+                    .FirstOrDefaultAsync(x => x.Id == serviceDetailViewModel.BillingDetailId);
+                if (billingDetail == null)
+                {
+                    return NotFound();
+                }
+
+               
+
+                ServiceDetail serviceDetail = await _converterHelper.ToServiceDetailAsync(serviceDetailViewModel, true);
+                _context.ServicesDetails.Update(serviceDetail);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(DetailService), new { id = serviceDetailViewModel.BillingDetailId });
+            }
+
+            return View(serviceDetailViewModel);
+        }
+
+        public async Task<IActionResult> EditServiceDetail(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            ServiceDetail serviceDetail = await _context.ServicesDetails
+                .Include(x => x.billingDetail)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (serviceDetail == null)
+            {
+                return NotFound();
+            }
+
+            ServiceDetailViewModel model = _converterHelper.ToServiceDetailViewModel(serviceDetail);
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditServiceDetail(int id, ServiceDetailViewModel serviceDetailViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                ServiceDetail serviceDetail = await _converterHelper.ToServiceDetailAsync(serviceDetailViewModel, false);
+                _context.ServicesDetails.Update(serviceDetail);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(DetailService), new { id = serviceDetailViewModel.BillingDetailId });
+            }
+
+            return View(serviceDetailViewModel);
+        }
+
+
+        public async Task<IActionResult> DeleteServiceDetail(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            ServiceDetail serviceDetail = await _context.ServicesDetails
+                .FirstOrDefaultAsync(x => x.Id == id);
+            if (serviceDetail == null)
+            {
+                return NotFound();
+            }
+
+            _context.ServicesDetails.Remove(serviceDetail);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(DetailService), new { id = serviceDetail.Id });
+        }
     }
 }

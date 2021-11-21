@@ -20,6 +20,8 @@ namespace huellitas.API.Data
 
         public DbSet<Billing> Billings { get; set; }
 
+        public DbSet<BillingDetail> BillingDetails { get; set; }
+
         public DbSet<ServiceDetail> ServicesDetails { get; set; }
 
         public DbSet<PetPhoto> PetPhotos { get; set; }

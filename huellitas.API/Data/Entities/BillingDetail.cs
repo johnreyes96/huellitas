@@ -34,5 +34,7 @@ namespace huellitas.API.Data.Entities
         [Display(Name = "Valor Subtotal")]
         [DisplayFormat(DataFormatString = "{0:C2}")]
         public int ValueSubtotal => UnitValue * Quantity;
+
+        public ICollection<ServiceDetail> ServiceDetails { get; set; }
     }
 }

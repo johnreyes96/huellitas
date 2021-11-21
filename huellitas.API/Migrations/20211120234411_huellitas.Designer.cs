@@ -10,7 +10,7 @@ using huellitas.API.Data;
 namespace huellitas.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20211118044232_huellitas")]
+    [Migration("20211120234411_huellitas")]
     partial class huellitas
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -254,7 +254,7 @@ namespace huellitas.API.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("BillingDetail");
+                    b.ToTable("BillingDetails");
                 });
 
             modelBuilder.Entity("huellitas.API.Data.Entities.DocumentType", b =>
@@ -393,7 +393,7 @@ namespace huellitas.API.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int?>("billingDetailId")
+                    b.Property<int>("billingDetailId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -638,8 +638,10 @@ namespace huellitas.API.Migrations
             modelBuilder.Entity("huellitas.API.Data.Entities.ServiceDetail", b =>
                 {
                     b.HasOne("huellitas.API.Data.Entities.BillingDetail", "billingDetail")
-                        .WithMany()
-                        .HasForeignKey("billingDetailId");
+                        .WithMany("ServiceDetails")
+                        .HasForeignKey("billingDetailId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("billingDetail");
                 });
@@ -658,6 +660,11 @@ namespace huellitas.API.Migrations
             modelBuilder.Entity("huellitas.API.Data.Entities.Billing", b =>
                 {
                     b.Navigation("BillingDetails");
+                });
+
+            modelBuilder.Entity("huellitas.API.Data.Entities.BillingDetail", b =>
+                {
+                    b.Navigation("ServiceDetails");
                 });
 
             modelBuilder.Entity("huellitas.API.Data.Entities.DocumentType", b =>

@@ -296,7 +296,7 @@ namespace huellitas.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BillingDetail",
+                name: "BillingDetails",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -308,15 +308,15 @@ namespace huellitas.API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BillingDetail", x => x.Id);
+                    table.PrimaryKey("PK_BillingDetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BillingDetail_Billings_BillingId",
+                        name: "FK_BillingDetails_Billings_BillingId",
                         column: x => x.BillingId,
                         principalTable: "Billings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BillingDetail_Services_ServiceId",
+                        name: "FK_BillingDetails_Services_ServiceId",
                         column: x => x.ServiceId,
                         principalTable: "Services",
                         principalColumn: "Id",
@@ -330,17 +330,17 @@ namespace huellitas.API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Description = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    billingDetailId = table.Column<int>(type: "int", nullable: true)
+                    billingDetailId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ServicesDetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ServicesDetails_BillingDetail_billingDetailId",
+                        name: "FK_ServicesDetails_BillingDetails_billingDetailId",
                         column: x => x.billingDetailId,
-                        principalTable: "BillingDetail",
+                        principalTable: "BillingDetails",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -404,19 +404,19 @@ namespace huellitas.API.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BillingDetail_BillingId",
-                table: "BillingDetail",
+                name: "IX_BillingDetails_BillingId",
+                table: "BillingDetails",
                 column: "BillingId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BillingDetail_Id",
-                table: "BillingDetail",
+                name: "IX_BillingDetails_Id",
+                table: "BillingDetails",
                 column: "Id",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_BillingDetail_ServiceId",
-                table: "BillingDetail",
+                name: "IX_BillingDetails_ServiceId",
+                table: "BillingDetails",
                 column: "ServiceId");
 
             migrationBuilder.CreateIndex(
@@ -507,7 +507,7 @@ namespace huellitas.API.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "BillingDetail");
+                name: "BillingDetails");
 
             migrationBuilder.DropTable(
                 name: "Billings");

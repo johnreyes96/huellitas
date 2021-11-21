@@ -20,6 +20,12 @@ namespace huellitas.API.Helpers
 
         Task<BillingDetail> ToBillingDetailAsync(BillingDetailViewModel model, bool isNew);
 
+        BillingDetailViewModel ToBillingDetailViewModel(BillingDetail BillingDetail);
+
+        Task<ServiceDetail> ToServiceDetailAsync(ServiceDetailViewModel model, bool isNew);
+
+        ServiceDetailViewModel ToServiceDetailViewModel(ServiceDetail serviceDetail);
+
 
     }
 }

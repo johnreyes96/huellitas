@@ -122,5 +122,43 @@ namespace huellitas.API.Helpers
                 UnitValue = model.UnitValue
             };
         }
+
+
+
+        public BillingDetailViewModel ToBillingDetailViewModel(BillingDetail billingDetail)
+        {
+            return new BillingDetailViewModel
+            {
+                BillingId = billingDetail.Billing.Id,
+                Quantity = billingDetail.Quantity,
+                UnitValue = billingDetail.UnitValue,
+                ServiceId = billingDetail.Service.Id,
+                Services = _combosHelper.GetComboServices()
+            };
+        }
+
+
+        public async Task<ServiceDetail> ToServiceDetailAsync(ServiceDetailViewModel model, bool isNew)
+        {
+            return new ServiceDetail
+            {
+                Id = isNew ? 0 : model.Id,
+                billingDetail = await _context.BillingDetails.FindAsync(model.BillingDetailId),
+                Description = model.Description
+            };
+        }
+
+        public ServiceDetailViewModel ToServiceDetailViewModel(ServiceDetail serviceDetail)
+        {
+            return new ServiceDetailViewModel
+            {
+                Id = serviceDetail.Id,
+                BillingDetailId = serviceDetail.billingDetail.Id,
+                Description = serviceDetail.Description
+            };
+        }
+        
+
+
     }
 }
