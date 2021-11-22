@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace huellitas.API.Data.Entities
@@ -16,6 +17,7 @@ namespace huellitas.API.Data.Entities
         public string Description { get; set; }
 
         [Display(Name = "Detalle Factura")]
+        [JsonIgnore]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public BillingDetail billingDetail { get; set; }
     }

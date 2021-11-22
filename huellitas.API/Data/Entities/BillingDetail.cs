@@ -20,14 +20,11 @@ namespace huellitas.API.Data.Entities
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public Service Service { get; set; }
 
-
         [Display(Name = "Valor Unitario")]
-        [JsonIgnore]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public int UnitValue { get; set; }
 
         [Display(Name = "Cantidad")]
-        [JsonIgnore]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public int Quantity { get; set; }
 

@@ -11,7 +11,6 @@ namespace huellitas.API.Data.Entities
     {
         public int Id { get; set; }
 
-        [JsonIgnore]
         [Display(Name = "Tipo de Mascota")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public PetType petType { get; set; }
