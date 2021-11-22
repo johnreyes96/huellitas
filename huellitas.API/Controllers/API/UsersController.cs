@@ -48,6 +48,20 @@ namespace huellitas.API.Controllers.API
         {
             User user = await _context.Users
                 .Include(x => x.DocumentType)
+                .Include(x => x.Appointments)
+                .ThenInclude(x => x.AppointmentType)
+                .Include(x => x.pets)
+                .ThenInclude(x => x.petType)
+                .Include(x => x.pets)
+                .ThenInclude(x => x.PetPhotos)
+                .Include(x => x.pets)
+                .ThenInclude(x => x.Billings)
+                .ThenInclude(x => x.BillingDetails)
+                .ThenInclude(x => x.ServiceDetails)
+                .Include(x => x.pets)
+                .ThenInclude(x => x.Billings)
+                .ThenInclude(x => x.BillingDetails)
+                .ThenInclude(x => x.Service)
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (user == null)
             {
@@ -105,6 +119,69 @@ namespace huellitas.API.Controllers.API
                 $"Para habilitar el usuario, " +
                 $"por favor hacer clic en el siguiente enlace: </br></br><a href = \"{tokenLink}\">Confirmar Email</a>");
             return Ok(user);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<User>> PutUser(string id, UserRequest request)
+        {
+            if (id != request.Id)
+            {
+                return BadRequest();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            DocumentType documentType = await _context.DocumentTypes.FindAsync(request.DocumentTypeId);
+            if (documentType == null)
+            {
+                return BadRequest("El tipo de documento no existe.");
+            }
+
+            User user = await _userHelper.GetUserAsync(Guid.Parse(request.Id));
+            if (user == null)
+            {
+                return BadRequest("No existe usuario.");
+            }
+
+            Guid imageId = Guid.Empty;
+            if (request.Image != null && request.Image.Length > 0)
+            {
+                imageId = await _blobHelper.UploadBlobAsync(request.Image, "users");
+            }
+
+            user.Address = request.Address;
+            user.Document = request.Document;
+            user.DocumentType = documentType;
+            user.FirstName = request.FirstName;
+            user.ImageId = imageId;
+            user.LastName = request.LastName;
+            user.PhoneNumber = request.PhoneNumber;
+
+            await _userHelper.UpdateUserAsync(user);
+            return Ok(user);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePetType(string id)
+        {
+            User user = await _userHelper.GetUserAsync(Guid.Parse(id));
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            if (user.ImageId != Guid.Empty)
+            {
+                await _blobHelper.DeleteBlobAsync(user.ImageId, "users");
+            }
+            await _userHelper.DeleteUserAsync(user);
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
