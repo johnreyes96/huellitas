@@ -1,6 +1,9 @@
-﻿using huellitas.API.Data.Entities;
+﻿using huellitas.API.Data;
+using huellitas.API.Data.Entities;
 using huellitas.API.Helpers;
 using huellitas.API.Models;
+using huellitas.API.Models.Request;
+using huellitas.Common.Enums;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -22,11 +25,74 @@ namespace huellitas.API.Controllers.API
     {
         private readonly IUserHelper _userHelper;
         private readonly IConfiguration _configuration;
+        private readonly DataContext _context;
+        private readonly IMailHelper _mailHelper;
+        private readonly IBlobHelper _blobHelper;
 
-        public AccountController(IUserHelper userHelper, IConfiguration configuration)
+        public AccountController(IUserHelper userHelper, IConfiguration configuration, DataContext context, IMailHelper mailHelper, IBlobHelper blobHelper)
         {
             _userHelper = userHelper;
             _configuration = configuration;
+            _context = context;
+            _mailHelper = mailHelper;
+            _blobHelper = blobHelper;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<User>> PostUser(RegisterRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            DocumentType documentType = await _context.DocumentTypes.FindAsync(request.Id);
+            if (documentType == null)
+            {
+                return BadRequest("Tipo de documento no existe.");
+            }
+
+            User user = await _userHelper.GetUserAsync(request.Email);
+            if (user != null)
+            {
+                return BadRequest("Ya existe un usuario registrado con ese email.");
+            }
+
+            Guid imageId = Guid.Empty;
+            if (request.Image != null && request.Image.Length > 0)
+            {
+                imageId = await _blobHelper.UploadBlobAsync(request.Image, "users");
+            }
+
+            user = new User
+            {
+                Address = request.Address,
+                Document = request.Document,
+                DocumentType = documentType,
+                Email = request.Email,
+                FirstName = request.FirstName,
+                ImageId = imageId,
+                LastName = request.LastName,
+                PhoneNumber = request.PhoneNumber,
+                UserName = request.Email,
+                UserType = UserType.User
+            };
+
+            await _userHelper.AddUserAsync(user, request.Password);
+            await _userHelper.AddUserToRoleAsync(user, user.UserType.ToString());
+
+            string myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+            string tokenLink = Url.Action("ConfirmEmail", "Account", new
+            {
+                userid = user.Id,
+                token = myToken
+            }, protocol: HttpContext.Request.Scheme);
+
+            _mailHelper.SendMail(user.Email, "Huellitas - Confirmación de cuenta", $"<h1>Huellitas - Confirmación de cuenta</h1>" +
+                $"Para habilitar el usuario, " +
+                $"por favor hacer clic en el siguiente enlace: </br></br><a href = \"{tokenLink}\">Confirmar Email</a>");
+
+            return Ok(user);
         }
 
         [HttpPost]
