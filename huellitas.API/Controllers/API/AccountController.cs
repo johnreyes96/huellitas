@@ -46,7 +46,7 @@ namespace huellitas.API.Controllers.API
                 return BadRequest(ModelState);
             }
 
-            DocumentType documentType = await _context.DocumentTypes.FindAsync(request.Id);
+            DocumentType documentType = await _context.DocumentTypes.FindAsync(request.DocumentTypeId);
             if (documentType == null)
             {
                 return BadRequest("Tipo de documento no existe.");
