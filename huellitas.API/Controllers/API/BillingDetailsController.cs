@@ -30,13 +30,13 @@ namespace huellitas.API.Controllers.API
             }
 
             Billing billing = await _context.Billings.FindAsync(request.Id);
-            if (billing != null)
+            if (billing == null)
             {
                 return BadRequest("No existe la factura.");
             }
 
             Service service = await _context.Services.FindAsync(request.Id);
-            if (service != null)
+            if (service == null)
             {
                 return BadRequest("No existe el servicio.");
             }
@@ -68,19 +68,19 @@ namespace huellitas.API.Controllers.API
             }
 
             Billing billing = await _context.Billings.FindAsync(request.Id);
-            if (billing != null)
+            if (billing == null)
             {
                 return BadRequest("No existe la factura.");
             }
 
             Service service = await _context.Services.FindAsync(request.Id);
-            if (service != null)
+            if (service == null)
             {
                 return BadRequest("No existe el servicio.");
             }
 
             BillingDetail billingDetail = await _context.BillingDetails.FindAsync(request.Id);
-            if (billingDetail != null)
+            if (billingDetail == null)
             {
                 return BadRequest("No existe el detalle de la factura.");
             }

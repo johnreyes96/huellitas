@@ -55,7 +55,7 @@ namespace huellitas.API.Controllers.API
             }
 
             Pet pet = await _context.Pets.FindAsync(request.Id);
-            if (pet != null)
+            if (pet == null)
             {
                 return BadRequest("No existe la mascota.");
             }

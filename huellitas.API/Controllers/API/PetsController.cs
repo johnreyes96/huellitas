@@ -65,7 +65,7 @@ namespace huellitas.API.Controllers.API
             }
 
             PetType petType = await _context.PetTypes.FindAsync(request.petTypeId);
-            if (petType != null)
+            if (petType == null)
             {
                 return BadRequest("No existe el tipo de mascota.");
             }
@@ -117,13 +117,13 @@ namespace huellitas.API.Controllers.API
             }
 
             PetType petType = await _context.PetTypes.FindAsync(request.petTypeId);
-            if (petType != null)
+            if (petType == null)
             {
                 return BadRequest("No existe el tipo de mascota.");
             }
 
             Pet pet = await _context.Pets.FindAsync(request.Id);
-            if (pet != null)
+            if (pet == null)
             {
                 return BadRequest("No existe la mascota.");
             }
