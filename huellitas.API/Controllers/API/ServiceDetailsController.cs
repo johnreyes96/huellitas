@@ -28,7 +28,7 @@ namespace huellitas.API.Controllers.API
                 return BadRequest(ModelState);
             }
 
-            BillingDetail billingDetail = await _context.BillingDetails.FindAsync(request.Id);
+            BillingDetail billingDetail = await _context.BillingDetails.FindAsync(request.BillingDetailId);
             if (billingDetail == null)
             {
                 return BadRequest("No existe el detalle de la factura.");
@@ -58,7 +58,7 @@ namespace huellitas.API.Controllers.API
                 return BadRequest(ModelState);
             }
 
-            BillingDetail billingDetail = await _context.BillingDetails.FindAsync(request.Id);
+            BillingDetail billingDetail = await _context.BillingDetails.FindAsync(request.BillingDetailId);
             if (billingDetail == null)
             {
                 return BadRequest("No existe el detalle de la factura.");
