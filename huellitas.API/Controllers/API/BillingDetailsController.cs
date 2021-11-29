@@ -21,6 +21,22 @@ namespace huellitas.API.Controllers.API
             _context = context;
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<BillingDetail>> GetBillingDetail(int id)
+        {
+            BillingDetail billingDetail = await _context.BillingDetails
+                .Include(x => x.Service)
+                .Include(x => x.ServiceDetails)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (billingDetail == null)
+            {
+                return NotFound();
+            }
+
+            return billingDetail;
+        }
+
         [HttpPost]
         public async Task<ActionResult<BillingDetail>> PostBillingDetail(BillingDetailRequest request)
         {
