@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace huellitas.API.Models
@@ -30,6 +31,12 @@ namespace huellitas.API.Models
         [MaxLength(20, ErrorMessage = "El campo {0} no puede tener más de {1} carácteres.")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public string Document { get; set; }
+
+        [DefaultValue("57")]
+        [Display(Name = "Codigo País")]
+        [MaxLength(5, ErrorMessage = "El campo {0} no puede tener más de {1} carácteres.")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        public string CountryCode { get; set; }
 
         [Display(Name = "Dirección")]
         [MaxLength(100, ErrorMessage = "El campo {0} no puede tener más de {1} carácteres.")]

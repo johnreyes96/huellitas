@@ -45,6 +45,7 @@ namespace huellitas.API.Helpers
             return new User
             {
                 Address = model.Address,
+                CountryCode = model.CountryCode,
                 Document = model.Document,
                 DocumentType = await _context.DocumentTypes.FindAsync(model.DocumentTypeId),
                 Email = model.Email,
@@ -63,6 +64,7 @@ namespace huellitas.API.Helpers
             return new UserViewModel
             {
                 Address = user.Address,
+                CountryCode = user.CountryCode,
                 Document = user.Document,
                 DocumentTypeId = user.DocumentType.Id,
                 DocumentTypes = _combosHelper.GetComboDocumentTypes(),
