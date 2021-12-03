@@ -131,6 +131,7 @@ namespace huellitas.API.Controllers
                 Address = user.Address,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
+                CountryCode = user.CountryCode,
                 PhoneNumber = user.PhoneNumber,
                 ImageId = user.ImageId,
                 Id = user.Id,
@@ -156,6 +157,7 @@ namespace huellitas.API.Controllers
                 user.FirstName = model.FirstName;
                 user.LastName = model.LastName;
                 user.Address = model.Address;
+                user.CountryCode = model.CountryCode;
                 user.PhoneNumber = model.PhoneNumber;
                 user.ImageId = imageId;
                 user.DocumentType = await _context.DocumentTypes.FindAsync(model.DocumentTypeId);
