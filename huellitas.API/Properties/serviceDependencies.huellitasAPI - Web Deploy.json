@@ -1,13 +1,13 @@
 {
   "dependencies": {
     "storage1": {
-      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Storage/storageAccounts/huellitas",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Storage/storageAccounts/sahuellitas",
       "type": "storage.azure",
       "connectionId": "Blob:ConnectionString",
       "secretStore": "AzureAppSettings"
     },
     "mssql1": {
-      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/itmjohndbserver/databases/huellitas.API_db",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/apihuellitasdbserver/databases/huellitas.API_db",
       "type": "mssql.azure",
       "connectionId": "ConnectionStrings:DefaultConnection",
       "secretStore": "AzureAppSettings"

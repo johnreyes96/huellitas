@@ -36,7 +36,7 @@ namespace huellitas.API.Data.Entities
 
         [Display(Name = "Foto")]
         public string ImageFullPath => ImageId == Guid.Empty
-            ? $"https://apihuellitas.azurewebsites.net/images/no_image.png"
+            ? $"https://huellitasapi.azurewebsites.net/images/no_image.png"
             : $"https://huellitasapi.blob.core.windows.net/users/{ImageId}";
 
         [Display(Name = "Tipo de usuario")]

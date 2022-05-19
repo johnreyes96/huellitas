@@ -57,7 +57,7 @@ namespace huellitas.API.Models
 
         [Display(Name = "Foto")]
         public string ImageFullPath => ImageId == Guid.Empty
-            ? $"https://apihuellitas.azurewebsites.net/images/no_image.png"
+            ? $"https://huellitasapi.azurewebsites.net/images/no_image.png"
             : $"https://huellitasapi.blob.core.windows.net/users/{ImageId}";
     }
 }

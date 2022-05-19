@@ -4,7 +4,7 @@
   "parameters": {
     "resourceGroupName": {
       "type": "string",
-      "defaultValue": "ITM",
+      "defaultValue": "sahuellitas",
       "metadata": {
         "_parameterType": "resourceGroup",
         "description": "Name of the resource group for the resource. It is recommended to put resources under same resource group for better tracking."
@@ -51,7 +51,7 @@
             {
               "kind": "v12.0",
               "location": "[parameters('resourceLocation')]",
-              "name": "itmjohndbserver",
+              "name": "apihuellitasdbserver",
               "type": "Microsoft.Sql/servers",
               "apiVersion": "2017-10-01-preview"
             },
@@ -63,11 +63,11 @@
               },
               "kind": "v12.0,user",
               "location": "[parameters('resourceLocation')]",
-              "name": "itmjohndbserver/huellitas.API_db",
+              "name": "apihuellitasdbserver/huellitas.API_db",
               "type": "Microsoft.Sql/servers/databases",
               "apiVersion": "2017-10-01-preview",
               "dependsOn": [
-                "itmjohndbserver"
+                "apihuellitasdbserver"
               ]
             }
           ]
