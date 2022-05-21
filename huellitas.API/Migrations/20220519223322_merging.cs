@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace huellitas.API.Migrations
 {
-    public partial class huellitas : Migration
+    public partial class merging : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -43,8 +43,11 @@ namespace huellitas.API.Migrations
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     DocumentTypeId = table.Column<int>(type: "int", nullable: false),
                     Document = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    CountryCode = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false),
                     Address = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     ImageId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SocialImageURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LoginType = table.Column<int>(type: "int", nullable: false),
                     UserType = table.Column<int>(type: "int", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),

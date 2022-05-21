@@ -45,7 +45,7 @@ namespace huellitas.API.Data.Entities
         public string ImageFullPath => LoginType == LoginType.Email
             ? ImageId == Guid.Empty
                 ? $"https://huellitasapi.azurewebsites.net/images/no_image.png"
-                : $"https://huellitasapi.blob.core.windows.net/users/{ImageId}"
+                : $"https://sahuellitas.blob.core.windows.net/users/{ImageId}"
             : string.IsNullOrEmpty(SocialImageURL)
                 ? $"https://huellitasapi.azurewebsites.net/images/no_image.png"
                 : SocialImageURL;

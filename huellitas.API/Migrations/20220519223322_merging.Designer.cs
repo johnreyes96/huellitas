@@ -10,8 +10,8 @@ using huellitas.API.Data;
 namespace huellitas.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20211120234411_huellitas")]
-    partial class huellitas
+    [Migration("20220519223322_merging")]
+    partial class merging
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -422,6 +422,11 @@ namespace huellitas.API.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CountryCode")
+                        .IsRequired()
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
+
                     b.Property<string>("Document")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -456,6 +461,9 @@ namespace huellitas.API.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<int>("LoginType")
+                        .HasColumnType("int");
+
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -474,6 +482,9 @@ namespace huellitas.API.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SocialImageURL")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")
